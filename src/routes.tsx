@@ -1,5 +1,5 @@
-import { LayoutDashboard, Users as UsersIcon } from 'lucide-react'
-import { Home, Users } from './lazyPages'
+import { LayoutDashboard, ScrollText, Users as UsersIcon } from 'lucide-react'
+import { Audit, Home, Users } from './lazyPages'
 import { t } from './lib/i18n'
 import type { Permission } from './lib/permissions'
 
@@ -17,6 +17,7 @@ export interface AppRoute {
 export const APP_ROUTES: AppRoute[] = [
   { path: '/', permission: 'home.view', label: t.nav.home, icon: <LayoutDashboard size={20} />, element: <Home /> },
   { path: '/usuarios', permission: 'users.manage', label: t.nav.users, icon: <UsersIcon size={20} />, element: <Users /> },
+  { path: '/auditoria', permission: 'audit.read', label: t.nav.audit, icon: <ScrollText size={20} />, element: <Audit /> },
 ]
 
 /** First page the account may open: where a denied `/` sends someone. */

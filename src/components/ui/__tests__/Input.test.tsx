@@ -60,6 +60,11 @@ describe('Input', () => {
     expect(input).toHaveFocus()
   })
 
+  it('keeps the label of a date field out of its format hint', () => {
+    render(<Input label="Since" type="date" />)
+    expect(screen.getByText('Since', { selector: 'label' })).toHaveAttribute('data-shrink', 'true')
+  })
+
   it('accepts a numeric value, for fields like kg or precio', () => {
     render(<Input label="Kilogramos" value={12.5} onChange={() => {}} />)
     expect(screen.getByLabelText('Kilogramos')).toHaveValue('12.5')

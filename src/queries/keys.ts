@@ -14,6 +14,22 @@ export interface UsersListKey {
   rowsPerPage: number
 }
 
+/** Filters of the audit trail. Empty strings mean "no filter"; `since`/`until` are ISO 8601. */
+export interface AuditListKey {
+  action: string
+  outcome: string
+  actorId: string
+  actorRole: string
+  organizationId: string
+  targetType: string
+  targetId: string
+  requestId: string
+  since: string
+  until: string
+  page: number
+  rowsPerPage: number
+}
+
 export const queryKeys = {
   /** The signed-in Somos R account (`GET /admin/me`). */
   me: ['me'] as const,
@@ -21,6 +37,11 @@ export const queryKeys = {
   catalogs: {
     all: ['catalogs'] as const,
     roles: ['catalogs', 'roles'] as const,
+  },
+
+  audit: {
+    all: ['audit'] as const,
+    list: (filters: AuditListKey) => ['audit', 'list', filters] as const,
   },
 
   users: {

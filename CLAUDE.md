@@ -66,6 +66,15 @@ The QR library (`qrcode.react`) is lazy-loaded with the enrollment step, so it i
 - **Detail** (`GET /admin/users/{id}`): the server **audits every open**, so it is fetched each time (`staleTime: 0`). Actions: deactivate (optional reason; also ends every session)/reactivate, unlock, sign out everywhere, resend invitation (only when `pending_activation`), change role (only ECA/Association staff, only roles of their own type from `GET /catalogs/roles`). Deactivating and reactivating ask for confirmation; the caller's own account can't be deactivated (the server refuses too: `cannot_change_own_status`). Values an action needs travel as mutation variables, never read from state the dialog clears right after (a bug the tests caught).
 - Not built yet: assigning an organization to staff that has none (`PUT /admin/users/{id}/organization`): it needs an organization picker, which comes with the applications module.
 
+## Audit viewer (`/auditoria`, capability `audit.read`)
+
+`features/audit/`: the whole trail (`GET /admin/audit-log`, all organizations and Somos R's own accounts), newest first.
+- **Every read of the trail is itself recorded by the server** (`admin.audit_viewed`, with the *names* of the filters used). So the viewer never reads on its own: filters are applied with a button (not per keystroke), the query has `refetchOnWindowFocus: false` and a long `staleTime`, and reloading is an explicit "Actualizar" button. A test enforces each of these.
+- Filters: action (a select of the known actions), outcome, date range (whole days, local time: start of the first day to the last millisecond of the last), and "more filters" (actor id and role, organization id, target type and id, request id). Server pagination.
+- Each event opens a dialog with everything recorded, including `details` shown **as text** (never interpreted). It is already in the list, so it needs no request.
+- **Action texts** live in `es.json` (`audit.actions`). `src/features/audit/__tests__/auditHelpers.test.ts` lists every action of the backend (`app/domains/audit/actions.py`); when the backend adds one, add it there and to `es.json`. An action a build doesn't know shows as its raw code instead of disappearing.
+- Helpers live in `auditHelpers.ts`, not in `AuditFilters.tsx`: two files differing only in case collide on Windows and macOS.
+
 ## Status
 
-Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling, two-factor sign-in (TOTP, enrollment with QR, recovery codes), layout with menu and guards by capability, a home screen and the users module. Next, one PR each: applications, catalogs and audit when the backend exposes them (the audit endpoints and organizations picker first) (users first; applications, catalogs and audit when the backend exposes them).
+Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling, two-factor sign-in (TOTP, enrollment with QR, recovery codes), layout with menu and guards by capability, a home screen, the users module and the audit viewer. Next, one PR each, when the backend exposes them: applications (with the organization picker that completes users), then catalogs (users first; applications, catalogs and audit when the backend exposes them).
