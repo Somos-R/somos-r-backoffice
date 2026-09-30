@@ -6,7 +6,9 @@
     "loading": "Cargando…",
     "back": "Volver",
     "actions": "Acciones",
-    "saving": "Guardando…"
+    "saving": "Guardando…",
+    "copy": "Copiar",
+    "skipToContent": "Saltar al contenido"
   },
   "errorScreen": {
     "title": "Algo salió mal",
@@ -64,5 +66,98 @@
     "mfa_not_enrolled": "Esta cuenta aún no configuró la verificación en dos pasos.",
     "cannot_reset_own_mfa": "No puedes restablecer tu propia verificación en dos pasos.",
     "admin_network_denied": "El backoffice no está disponible desde esta red."
+  },
+  "nav": {
+    "home": "Inicio"
+  },
+  "sidebar": {
+    "brand": "Somos R",
+    "subtitle": "Backoffice",
+    "label": "Barra lateral",
+    "navigation": "Navegación principal",
+    "defaultUser": "Usuario",
+    "logout": "Cerrar sesión",
+    "roles": {
+      "platform_admin": "Somos R · Administrador"
+    }
+  },
+  "logout": {
+    "confirmTitle": "¿Cerrar sesión?",
+    "confirmMessage": "Tu sesión actual se cerrará.",
+    "confirmButton": "Cerrar sesión",
+    "successMessage": "Sesión cerrada exitosamente"
+  },
+  "forbidden": {
+    "title": "Sin acceso",
+    "message": "Tu cuenta no tiene permiso para ver esta pantalla.",
+    "back": "Ir al inicio"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Página no encontrada",
+    "backLink": "Volver al inicio"
+  },
+  "home": {
+    "greeting": "Bienvenido, {{name}}",
+    "subtitle": "Panel de administración de Somos R",
+    "soon": "Los módulos de solicitudes, usuarios, catálogos y auditoría llegan próximamente.",
+    "recoveryLow": "Te quedan {{count}} códigos de recuperación de tu verificación en dos pasos.",
+    "recoveryNone": "No te quedan códigos de recuperación: si pierdes tu aplicación de autenticación no podrás entrar."
+  },
+  "auth": {
+    "title": "Ingreso al backoffice",
+    "subtitle": "Solo para el equipo de Somos R",
+    "emailLabel": "Correo electrónico",
+    "passwordLabel": "Contraseña",
+    "continueButton": "Continuar",
+    "validation": {
+      "emailRequired": "El correo es requerido",
+      "emailInvalid": "Ingresa un correo válido",
+      "passwordRequired": "La contraseña es requerida",
+      "codeRequired": "El código es requerido",
+      "codeFormat": "El código tiene 6 dígitos",
+      "recoveryRequired": "El código de recuperación es requerido",
+      "recoveryFormat": "El código de recuperación tiene entre 8 y 16 caracteres"
+    },
+    "errors": {
+      "generic": "No pudimos iniciar sesión. Inténtalo de nuevo"
+    },
+    "expired": "Tu intento de ingreso expiró. Vuelve a empezar.",
+    "code": {
+      "title": "Verificación en dos pasos",
+      "subtitle": "Ingresa el código de 6 dígitos de tu aplicación de autenticación.",
+      "label": "Código de 6 dígitos",
+      "verifyButton": "Verificar",
+      "useRecovery": "Usar un código de recuperación"
+    },
+    "recovery": {
+      "title": "Código de recuperación",
+      "subtitle": "Cada código de recuperación sirve una sola vez.",
+      "label": "Código de recuperación",
+      "useAuthenticator": "Usar el código de mi aplicación"
+    },
+    "enroll": {
+      "title": "Configura la verificación en dos pasos",
+      "subtitle": "Tu cuenta la exige. Escanea el código con una aplicación de autenticación (Google Authenticator, Authy, 1Password…) y escribe el código de 6 dígitos que muestre.",
+      "qrLabel": "Código QR para tu aplicación de autenticación",
+      "manualKey": "¿No puedes escanear? Escribe esta clave en tu aplicación:",
+      "confirmButton": "Confirmar"
+    },
+    "saveCodes": {
+      "title": "Guarda tus códigos de recuperación",
+      "subtitle": "Si pierdes tu aplicación de autenticación, cada uno de estos códigos te deja entrar una vez. Se muestran solo ahora.",
+      "listLabel": "Códigos de recuperación",
+      "copyButton": "Copiar códigos",
+      "copied": "Códigos copiados",
+      "savedCheckbox": "Ya guardé mis códigos en un lugar seguro",
+      "continueButton": "Entrar al backoffice"
+    },
+    "backToStart": "Volver",
+    "session": {
+      "loading": "Cargando tu sesión…",
+      "loadError": "No pudimos cargar tu perfil.",
+      "retry": "Reintentar",
+      "logout": "Cerrar sesión"
+    }
   }
 }

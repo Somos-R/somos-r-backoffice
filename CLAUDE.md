@@ -47,6 +47,18 @@ The API URL is `VITE_API_URL`. A production build refuses to build without a rea
 - `queryClient` (`src/lib/queryClient.ts`) reports failures once, globally, through `lib/notifier.ts` and `<NotificationHost />`: a new mutation needs no `onError`. Opt out with `meta: { silent: true }`; `meta: { refreshOnError: [...] }` reloads keys when an action fails. It is wiped when the session ends.
 - Error text comes from the backend's stable `code` first (`t.apiErrors` in `es.json`), then its `detail`, then the caller's fallback (`getApiErrorMessage`). When the backend adds a code, add it to `es.json` and to `src/lib/__tests__/apiErrorCodes.test.ts`.
 
+## Sign-in (two factors)
+
+The backend's `/admin/auth/*` flow, in `features/auth/` (`LoginPage` is a small state machine of steps):
+1. **Password** (`POST /admin/auth/login`) answers with a short-lived `mfa_token` and `mfa_status`.
+2. **`code_required`** → the authenticator's 6-digit code, or (switching mode) one recovery code (`/admin/auth/mfa/verify`). **`enrollment_required`** (the account's first sign-in) → `EnrollStep`: QR + manual key (`/mfa/enroll`, asked **once** by `LoginPage`, never from an effect: two calls would give two different secrets), then the confirmation code (`/mfa/enroll/confirm`).
+3. Enrollment returns **recovery codes, shown once** (`SaveCodesStep`). The tokens are held in component state and the session only opens (`useAuth().signIn`) after the person ticks "I saved them", so a screen change can't lose the codes.
+4. `mfa_session_expired` at any step sends the person back to the password with a notice. Wrong password/code show the translated backend `code`.
+
+The profile comes from `GET /admin/me` (`useAuth().user`, React Query key `['me']`); its `capabilities` drive `useRoles().can(...)`, the menu and the route guards (`RequirePermission`). To gate a new screen, add its capability to `ServerPermission` in `src/lib/permissions.ts` (the backend announces it in `/admin/me`) and to the route in `src/routes.tsx`. Tokens are kept in localStorage for now (same open decision as the web's FD1). The backend only answers `/admin/*` from allowed networks (`admin_network_denied`).
+
+The QR library (`qrcode.react`) is lazy-loaded with the enrollment step, so it isn't in the first download. `Checkbox` and the extended `Input` (autofill/keyboard hints) are UI primitives with tests. Test fakes: `src/test/fakeAdminApi.tsx`.
+
 ## Status
 
-Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling and a placeholder page. Next, in separate PRs: sign-in with TOTP enrollment/verification (`/admin/auth/*`), layout and guards, then the modules (users first; applications, catalogs and audit when the backend exposes them).
+Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling, two-factor sign-in (TOTP, enrollment with QR, recovery codes), layout with menu and guards by capability, and a home screen. Next, one PR each: users (endpoints already on the backend), then applications, catalogs and audit when the backend exposes them (users first; applications, catalogs and audit when the backend exposes them).
