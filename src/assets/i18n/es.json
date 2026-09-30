@@ -33,5 +33,36 @@
     "title": "Backoffice",
     "subtitle": "Administración de Somos R",
     "placeholder": "Estamos preparando el backoffice. Muy pronto podrás revisar solicitudes, gestionar usuarios y catálogos."
+  },
+  "errors": {
+    "network": "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo de nuevo",
+    "tooManyRequests": "Demasiadas solicitudes. Espera un momento antes de volver a intentarlo",
+    "tooManyRequestsWait": "Demasiadas solicitudes. Vuelve a intentarlo en {{seconds}} segundos",
+    "validation": "Revisa los datos ingresados",
+    "server": "Ocurrió un error en el servidor. Inténtalo de nuevo en unos minutos.",
+    "generic": "No se pudo completar la acción. Inténtalo de nuevo.",
+    "forbidden": "No tienes permisos para realizar esta acción.",
+    "timeout": "El servidor tardó demasiado en responder. Si era una acción, revisa si se completó antes de repetirla."
+  },
+  "apiErrors": {
+    "invalid_credentials": "Credenciales inválidas. Si fallaste varias veces, tu cuenta puede estar bloqueada unos minutos",
+    "invalid_token": "Tu sesión no es válida. Inicia sesión de nuevo.",
+    "session_closed": "Tu sesión se cerró. Inicia sesión de nuevo.",
+    "session_outdated": "Tu sesión quedó desactualizada. Inicia sesión de nuevo.",
+    "account_disabled": "Tu cuenta está desactivada. Contacta a un administrador.",
+    "invalid_refresh_token": "Tu sesión expiró. Inicia sesión de nuevo.",
+    "unauthorized": "Debes iniciar sesión para continuar.",
+    "forbidden": "No tienes permisos para realizar esta acción.",
+    "not_found": "No encontramos lo que buscas.",
+    "user_not_found": "El usuario no existe.",
+    "method_not_allowed": "Esa operación no está permitida.",
+    "internal_error": "Ocurrió un error en el servidor. Inténtalo de nuevo en unos minutos.",
+    "invalid_mfa_code": "El código no es correcto. Revisa tu aplicación de autenticación o usa un código de recuperación.",
+    "mfa_session_expired": "Tu intento de ingreso expiró. Vuelve a empezar.",
+    "mfa_already_enrolled": "Esta cuenta ya tiene la verificación en dos pasos activada.",
+    "mfa_not_started": "Primero debes iniciar la configuración de la verificación en dos pasos.",
+    "mfa_not_enrolled": "Esta cuenta aún no configuró la verificación en dos pasos.",
+    "cannot_reset_own_mfa": "No puedes restablecer tu propia verificación en dos pasos.",
+    "admin_network_denied": "El backoffice no está disponible desde esta red."
   }
 }
