@@ -59,6 +59,8 @@ export function Input({
       sx={sx}
       autoFocus={autoFocus}
       slotProps={{
+        // A date field always shows its format, so the label must not sit on top of it.
+        inputLabel: type === 'date' ? { shrink: true } : undefined,
         htmlInput: { autoComplete, inputMode },
         input: {
           startAdornment: startAdornment ? (

@@ -5,6 +5,7 @@ import { mockAdapter } from '../../test/helpers'
 import { queryKeys } from '../keys'
 import { AFFECTED } from '../invalidation'
 import { usersQueries } from '../users'
+import { auditQueries } from '../audit'
 import { catalogQueries } from '../catalogs'
 import { STALE_TIME } from '../config'
 
@@ -82,5 +83,47 @@ describe('users queries', () => {
 
   it('give the roles catalog a long staleTime', () => {
     expect(catalogQueries.roles().staleTime).toBe(STALE_TIME.catalog)
+  })
+})
+
+describe('audit queries', () => {
+  const emptyFilters = {
+    action: '', outcome: '', actorId: '', actorRole: '', organizationId: '', targetType: '', targetId: '',
+    requestId: '', since: '', until: '', page: 0, rowsPerPage: 25,
+  }
+  const fetchAudit = async (over: Partial<typeof emptyFilters>) => {
+    const seen = record()
+    await new QueryClient().fetchQuery(auditQueries.list({ ...emptyFilters, ...over }))
+    return seen[0]
+  }
+
+  it('leave empty filters out instead of sending empty strings', async () => {
+    expect(await fetchAudit({})).toEqual({ limit: 25, offset: 0 })
+  })
+
+  it('send every filter under the name the server expects', async () => {
+    const sent = await fetchAudit({
+      action: 'auth.login', outcome: 'failure', actorId: 'a1', actorRole: 'platform_admin', organizationId: 'o1',
+      targetType: 'user', targetId: 't1', requestId: 'r1', since: '2026-01-01T00:00:00.000Z', until: '2026-01-02T00:00:00.000Z',
+      page: 2,
+    })
+    expect(sent).toEqual({
+      action: 'auth.login', outcome: 'failure', actor_id: 'a1', actor_role: 'platform_admin', organization_id: 'o1',
+      target_type: 'user', target_id: 't1', request_id: 'r1', since: '2026-01-01T00:00:00.000Z',
+      until: '2026-01-02T00:00:00.000Z', limit: 25, offset: 50,
+    })
+  })
+
+  it('are never reloaded on their own: every read is recorded in the trail', () => {
+    const options = auditQueries.list(emptyFilters)
+    expect(options.refetchOnWindowFocus).toBe(false)
+    expect(options.staleTime).toBeGreaterThanOrEqual(60_000)
+  })
+
+  it('keep their keys under the audit root, distinct per filter', () => {
+    const a = queryKeys.audit.list(emptyFilters)
+    const b = queryKeys.audit.list({ ...emptyFilters, action: 'auth.login' })
+    expect(a[0]).toBe('audit')
+    expect(JSON.stringify(a)).not.toBe(JSON.stringify(b))
   })
 })
