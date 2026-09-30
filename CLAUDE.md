@@ -40,6 +40,13 @@ The API URL is `VITE_API_URL`. A production build refuses to build without a rea
 - **Errors** are reported once, globally, and unexpected ones go through `lib/reportError.ts`.
 - **Permissions** come from the server: the backoffice asks `GET /admin/me` for `capabilities` and only shows what they allow. The UI only hides things: the backend enforces every rule and answers 403.
 
+## HTTP, session and errors
+
+- `apiClient` (`src/lib/apiClient.ts`) injects `Authorization: Bearer <token>` from `lib/session` (a plain module with `subscribe`, tokens under `backoffice_*` keys) and has a 15 s timeout. Read calls in `src/services/` take a last `options?: RequestOptions` and every `queryFn` forwards React Query's `signal`.
+- On a 401 it refreshes once against **`/admin/auth/refresh`** (`lib/tokenRefresh.ts`) and replays the request. The refresh is single-flight across requests and tabs (Web Locks) because the backend rotates refresh tokens and revokes the whole session if an old one is reused. If the refresh is rejected the session is cleared. Auth endpoints pass `skipAuthRefresh: true`.
+- `queryClient` (`src/lib/queryClient.ts`) reports failures once, globally, through `lib/notifier.ts` and `<NotificationHost />`: a new mutation needs no `onError`. Opt out with `meta: { silent: true }`; `meta: { refreshOnError: [...] }` reloads keys when an action fails. It is wiped when the session ends.
+- Error text comes from the backend's stable `code` first (`t.apiErrors` in `es.json`), then its `detail`, then the caller's fallback (`getApiErrorMessage`). When the backend adds a code, add it to `es.json` and to `src/lib/__tests__/apiErrorCodes.test.ts`.
+
 ## Status
 
-Scaffolding only: tooling, CI, UI primitives, theme, error handling and a placeholder page. Next, in separate PRs: HTTP client and session (`/admin/auth/*`), sign-in with TOTP enrollment/verification, layout and guards, then the modules (users first; applications, catalogs and audit when the backend exposes them).
+Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling and a placeholder page. Next, in separate PRs: sign-in with TOTP enrollment/verification (`/admin/auth/*`), layout and guards, then the modules (users first; applications, catalogs and audit when the backend exposes them).
