@@ -1,0 +1,125 @@
+name: CI — Backoffice
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE: ghcr.io/somos-r/backoffice
+
+jobs:
+  # ─── Quality gate: lint + tests (typecheck runs in the Docker build) ──────
+  quality:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Enable Corepack (pins pnpm from package.json)
+        run: corepack enable
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm exec tsc -b
+      - run: pnpm exec vitest run --coverage
+
+  # ─── Bundle budget: fail if the first download or a page chunk grows past package.json's limits ─
+  bundle-size:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - run: corepack enable
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build, only to measure sizes (this job publishes nothing)
+        run: pnpm build
+        env:
+          # Production builds refuse to run without an API URL (config/buildEnv.ts); the size does
+          # not depend on which one, so a placeholder is enough here.
+          VITE_API_URL: https://api.example.com
+      - run: pnpm check:bundle
+
+  # ─── Supply chain: fail on high/critical advisories in shipped dependencies ─
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - run: corepack enable
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Audit production dependencies
+        run: pnpm audit --prod --audit-level high
+
+  # ─── Secret scanning over the full history ───────────────────────────────
+  secrets:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      # The gitleaks GitHub Action needs a paid license on org repos; the CLI image is free.
+      - name: Scan history with gitleaks
+        run: docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.21.2 detect --source /repo --redact --no-banner --verbose
+
+  # ─── Build image (smoke test — not pushed anywhere for deployment yet) ────
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_tag: ${{ steps.meta.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/metadata-action@v6
+        id: meta
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=sha,prefix=,format=short
+            type=raw,value=latest
+
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          # Only publish the image once it's actually on main — PRs just
+          # need the build itself to succeed, that's what's required to merge.
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VITE_API_URL=${{ github.event_name == 'pull_request' && 'https://api.example.com' || vars.VITE_API_URL }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+# Deployment is not wired up here yet: it depends on the hosting decision (FD2 in the hardening plan).

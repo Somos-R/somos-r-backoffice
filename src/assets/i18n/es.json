@@ -1,0 +1,37 @@
+{
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "loading": "Cargando…",
+    "back": "Volver",
+    "actions": "Acciones",
+    "saving": "Guardando…"
+  },
+  "errorScreen": {
+    "title": "Algo salió mal",
+    "message": "Ocurrió un error inesperado al mostrar esta pantalla. Puedes intentarlo de nuevo; si sigue pasando, avisa al equipo de soporte.",
+    "retry": "Reintentar",
+    "reload": "Recargar la página",
+    "chunkMessage": "No se pudo cargar esta pantalla. Puede que haya una versión nueva de la aplicación o que la conexión se haya interrumpido. Recarga la página para continuar."
+  },
+  "ui": {
+    "table": {
+      "rowsPerPage": "Filas por página:",
+      "displayedRows": "{{from}}–{{to}} de {{total}}",
+      "moreThan": "más de {{to}}"
+    },
+    "formDrawer": {
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "requiredField": "{{field}} es requerido",
+      "togglePasswordVisibility": "Mostrar/ocultar contraseña",
+      "close": "Cerrar"
+    }
+  },
+  "app": {
+    "title": "Backoffice",
+    "subtitle": "Administración de Somos R",
+    "placeholder": "Estamos preparando el backoffice. Muy pronto podrás revisar solicitudes, gestionar usuarios y catálogos."
+  }
+}
