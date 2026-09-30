@@ -59,6 +59,13 @@ The profile comes from `GET /admin/me` (`useAuth().user`, React Query key `['me'
 
 The QR library (`qrcode.react`) is lazy-loaded with the enrollment step, so it isn't in the first download. `Checkbox` and the extended `Input` (autofill/keyboard hints) are UI primitives with tests. Test fakes: `src/test/fakeAdminApi.tsx`.
 
+## Users module (`/usuarios`, capability `users.manage`)
+
+`features/users/`: list, detail dialog and actions over the backend's `/admin/users`.
+- **List**: text search (`q`, debounced, ignored under 2 characters), filter by account type and by state (`active` / `inactive` / `locked` / `pending` map to `is_active`, `locked`, `pending_activation`), server pagination. An account can be in several states at once (`statusesOf`).
+- **Detail** (`GET /admin/users/{id}`): the server **audits every open**, so it is fetched each time (`staleTime: 0`). Actions: deactivate (optional reason; also ends every session)/reactivate, unlock, sign out everywhere, resend invitation (only when `pending_activation`), change role (only ECA/Association staff, only roles of their own type from `GET /catalogs/roles`). Deactivating and reactivating ask for confirmation; the caller's own account can't be deactivated (the server refuses too: `cannot_change_own_status`). Values an action needs travel as mutation variables, never read from state the dialog clears right after (a bug the tests caught).
+- Not built yet: assigning an organization to staff that has none (`PUT /admin/users/{id}/organization`): it needs an organization picker, which comes with the applications module.
+
 ## Status
 
-Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling, two-factor sign-in (TOTP, enrollment with QR, recovery codes), layout with menu and guards by capability, and a home screen. Next, one PR each: users (endpoints already on the backend), then applications, catalogs and audit when the backend exposes them (users first; applications, catalogs and audit when the backend exposes them).
+Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling, two-factor sign-in (TOTP, enrollment with QR, recovery codes), layout with menu and guards by capability, a home screen and the users module. Next, one PR each: applications, catalogs and audit when the backend exposes them (the audit endpoints and organizations picker first) (users first; applications, catalogs and audit when the backend exposes them).
