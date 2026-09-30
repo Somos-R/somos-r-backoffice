@@ -65,10 +65,22 @@
     "mfa_not_started": "Primero debes iniciar la configuración de la verificación en dos pasos.",
     "mfa_not_enrolled": "Esta cuenta aún no configuró la verificación en dos pasos.",
     "cannot_reset_own_mfa": "No puedes restablecer tu propia verificación en dos pasos.",
-    "admin_network_denied": "El backoffice no está disponible desde esta red."
+    "admin_network_denied": "El backoffice no está disponible desde esta red.",
+    "cannot_change_own_status": "No puedes desactivar tu propia cuenta.",
+    "role_not_editable": "El rol de este tipo de cuenta no se puede cambiar.",
+    "organization_not_applicable": "Este tipo de cuenta no pertenece a una organización.",
+    "already_in_organization": "Esa persona ya pertenece a una organización.",
+    "organization_not_found": "La organización no existe.",
+    "organization_type_mismatch": "La organización no es del mismo tipo que la cuenta.",
+    "organization_not_active": "La organización aún no está aprobada.",
+    "no_organization": "Esta cuenta no pertenece a una organización.",
+    "not_verified": "El reciclador aún no está verificado.",
+    "invitation_not_pending": "Esa persona ya activó su cuenta.",
+    "invalid_role": "Ese rol no es válido para este tipo de cuenta."
   },
   "nav": {
-    "home": "Inicio"
+    "home": "Inicio",
+    "users": "Usuarios"
   },
   "sidebar": {
     "brand": "Somos R",
@@ -158,6 +170,107 @@
       "loadError": "No pudimos cargar tu perfil.",
       "retry": "Reintentar",
       "logout": "Cerrar sesión"
+    }
+  },
+  "users": {
+    "title": "Usuarios",
+    "subtitle": "Cuentas de todas las organizaciones y de Somos R",
+    "searchPlaceholder": "Buscar por nombre, documento o correo...",
+    "typeLabel": "Tipo",
+    "allTypes": "Todos los tipos",
+    "statusLabel": "Estado",
+    "allStatuses": "Todos los estados",
+    "filterStatus": {
+      "active": "Activos",
+      "inactive": "Desactivados",
+      "locked": "Bloqueados",
+      "pending": "Pendientes de activar"
+    },
+    "countSingular": "cuenta",
+    "countPlural": "cuentas",
+    "empty": "No hay usuarios con esos filtros.",
+    "emptySearch": "Sin resultados para \"{{query}}\"",
+    "table": {
+      "name": "Nombre",
+      "type": "Tipo",
+      "role": "Rol",
+      "status": "Estado",
+      "created": "Creado",
+      "actions": "Acciones"
+    },
+    "view": "Ver",
+    "types": {
+      "citizen": "Ciudadano",
+      "building": "Conjunto",
+      "recycler": "Reciclador",
+      "eca": "ECA",
+      "association": "Asociación",
+      "b2b_client": "Empresa",
+      "platform": "Somos R"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Desactivado",
+      "locked": "Bloqueado",
+      "pending": "Pendiente de activar"
+    },
+    "detail": {
+      "loadError": "No pudimos cargar el detalle de esta cuenta.",
+      "profile": "Perfil",
+      "security": "Seguridad",
+      "actions": "Acciones",
+      "email": "Correo",
+      "phone": "Teléfono",
+      "document": "Documento",
+      "type": "Tipo de cuenta",
+      "role": "Rol",
+      "organization": "Organización",
+      "created": "Creada",
+      "emailVerified": "Correo verificado",
+      "recyclerVerification": "Verificación de reciclador",
+      "verification": {
+        "pending": "Pendiente",
+        "verified": "Verificado",
+        "rejected": "Rechazado"
+      },
+      "mfa": "Verificación en dos pasos",
+      "failedAttempts": "Intentos fallidos de ingreso",
+      "lockedUntil": "Bloqueada hasta",
+      "yes": "Sí",
+      "no": "No",
+      "none": "—",
+      "ownAccount": "Esta es tu cuenta: no puedes desactivarla.",
+      "closeButton": "Cerrar"
+    },
+    "actions": {
+      "deactivate": "Desactivar cuenta",
+      "reactivate": "Reactivar cuenta",
+      "unlock": "Desbloquear",
+      "revokeSessions": "Cerrar sesiones",
+      "resend": "Reenviar invitación",
+      "saveRole": "Guardar rol",
+      "roleLabel": "Rol"
+    },
+    "confirm": {
+      "deactivateTitle": "¿Desactivar esta cuenta?",
+      "deactivateMessage": "La persona no podrá entrar y se cerrarán todas sus sesiones.",
+      "reactivateTitle": "¿Reactivar esta cuenta?",
+      "reactivateMessage": "La persona podrá volver a entrar.",
+      "reasonLabel": "Motivo (opcional)",
+      "deactivateButton": "Desactivar",
+      "reactivateButton": "Reactivar",
+      "revokeTitle": "¿Cerrar todas sus sesiones?",
+      "revokeMessage": "La persona tendrá que iniciar sesión de nuevo en todos sus dispositivos.",
+      "revokeButton": "Cerrar sesiones"
+    },
+    "messages": {
+      "deactivated": "Cuenta desactivada",
+      "reactivated": "Cuenta reactivada",
+      "unlocked": "Cuenta desbloqueada",
+      "revoked": "Sesiones cerradas",
+      "resent": "Invitación reenviada a {{email}}",
+      "roleChanged": "Rol actualizado",
+      "actionError": "No pudimos completar la acción"
     }
   }
 }
