@@ -17,6 +17,10 @@ export interface InputProps {
   size?: 'small' | 'medium'
   startAdornment?: React.ReactNode
   endAdornment?: React.ReactNode
+  /** Browser hint: `one-time-code` lets the phone offer the code it just received. */
+  autoComplete?: string
+  inputMode?: 'text' | 'numeric' | 'email' | 'tel'
+  autoFocus?: boolean
   sx?: SxProps<Theme>
 }
 
@@ -34,6 +38,9 @@ export function Input({
   size = 'small',
   startAdornment,
   endAdornment,
+  autoComplete,
+  inputMode,
+  autoFocus,
   sx,
 }: InputProps) {
   return (
@@ -50,7 +57,9 @@ export function Input({
       fullWidth={fullWidth}
       size={size}
       sx={sx}
+      autoFocus={autoFocus}
       slotProps={{
+        htmlInput: { autoComplete, inputMode },
         input: {
           startAdornment: startAdornment ? (
             <InputAdornment position="start">{startAdornment}</InputAdornment>

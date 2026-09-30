@@ -52,6 +52,14 @@ describe('Input', () => {
     expect(screen.getByRole('textbox')).toBeRequired()
   })
 
+  it('passes the autofill and keyboard hints to the input', () => {
+    render(<Input label="Code" autoComplete="one-time-code" inputMode="numeric" autoFocus />)
+    const input = screen.getByLabelText('Code')
+    expect(input).toHaveAttribute('autocomplete', 'one-time-code')
+    expect(input).toHaveAttribute('inputmode', 'numeric')
+    expect(input).toHaveFocus()
+  })
+
   it('accepts a numeric value, for fields like kg or precio', () => {
     render(<Input label="Kilogramos" value={12.5} onChange={() => {}} />)
     expect(screen.getByLabelText('Kilogramos')).toHaveValue('12.5')
