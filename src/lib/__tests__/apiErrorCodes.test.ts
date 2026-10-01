@@ -16,7 +16,7 @@ const BACKEND_CODES = [
   'cannot_reset_own_mfa', 'admin_network_denied',
   'cannot_change_own_status', 'role_not_editable', 'organization_not_applicable', 'already_in_organization',
   'organization_not_found', 'organization_type_mismatch', 'organization_not_active', 'no_organization',
-  'not_verified', 'invitation_not_pending', 'invalid_role',
+  'not_verified', 'invitation_not_pending', 'invalid_role', 'code_already_exists', 'invalid_code',
 ]
 
 describe('error code dictionary', () => {
