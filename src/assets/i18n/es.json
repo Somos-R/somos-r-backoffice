@@ -76,12 +76,15 @@
     "no_organization": "Esta cuenta no pertenece a una organización.",
     "not_verified": "El reciclador aún no está verificado.",
     "invitation_not_pending": "Esa persona ya activó su cuenta.",
-    "invalid_role": "Ese rol no es válido para este tipo de cuenta."
+    "invalid_role": "Ese rol no es válido para este tipo de cuenta.",
+    "code_already_exists": "Ya existe un elemento con ese código.",
+    "invalid_code": "El código no tiene el formato permitido."
   },
   "nav": {
     "home": "Inicio",
     "users": "Usuarios",
-    "audit": "Auditoría"
+    "audit": "Auditoría",
+    "catalogs": "Catálogos"
   },
   "sidebar": {
     "brand": "Somos R",
@@ -380,6 +383,60 @@
       "transaction.delivered": "Transacción entregada",
       "transaction.paid": "Transacción pagada",
       "inventory.updated": "Inventario actualizado"
+    }
+  },
+  "catalogs": {
+    "title": "Catálogos",
+    "subtitle": "Materiales y tipos de documento que usan los portales. Nada se borra: desactivar impide el uso nuevo y lo oculta de las listas; lo que ya existe sigue funcionando.",
+    "table": {
+      "code": "Código",
+      "name": "Nombre",
+      "unit": "Unidad",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Desactivado"
+    },
+    "empty": "Aún no hay elementos.",
+    "materials": {
+      "title": "Materiales",
+      "add": "Agregar material",
+      "drawerTitle": "Agregar material",
+      "codeLabel": "Código",
+      "codeHelp": "No se puede cambiar después.",
+      "nameLabel": "Nombre",
+      "codeFormat": "Usa minúsculas, números y guion bajo; empieza con una letra (2 a 30 caracteres).",
+      "edit": "Editar material",
+      "deactivateTitle": "Desactivar material",
+      "deactivateMessage": "No se podrá usar en pesajes ni ventas nuevos y dejará de aparecer en las listas. Lo ya registrado sigue igual."
+    },
+    "documentTypes": {
+      "title": "Tipos de documento",
+      "add": "Agregar tipo de documento",
+      "drawerTitle": "Agregar tipo de documento",
+      "codeLabel": "Código",
+      "codeHelp": "No se puede cambiar después.",
+      "nameLabel": "Nombre",
+      "codeFormat": "Usa mayúsculas y números; empieza con una letra (2 a 10 caracteres).",
+      "edit": "Editar tipo de documento",
+      "deactivateTitle": "Desactivar tipo de documento",
+      "deactivateMessage": "No se podrá usar en cuentas ni vendedores nuevos y dejará de aparecer en las listas. Las cuentas existentes conservan el suyo."
+    },
+    "actions": {
+      "edit": "Editar",
+      "deactivate": "Desactivar",
+      "reactivate": "Reactivar",
+      "save": "Guardar",
+      "keep": "Cancelar"
+    },
+    "messages": {
+      "created": "{{name}} fue agregado",
+      "renamed": "Cambios guardados en {{name}}",
+      "deactivated": "{{name}} fue desactivado",
+      "reactivated": "{{name}} fue reactivado",
+      "error": "No pudimos completar la acción"
     }
   }
 }

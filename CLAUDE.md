@@ -75,6 +75,14 @@ The QR library (`qrcode.react`) is lazy-loaded with the enrollment step, so it i
 - **Action texts** live in `es.json` (`audit.actions`). `src/features/audit/__tests__/auditHelpers.test.ts` lists every action of the backend (`app/domains/audit/actions.py`); when the backend adds one, add it there and to `es.json`. An action a build doesn't know shows as its raw code instead of disappearing.
 - Helpers live in `auditHelpers.ts`, not in `AuditFilters.tsx`: two files differing only in case collide on Windows and macOS.
 
+## Catalogs (`/catalogos`, capability `catalogs.manage`)
+
+`features/catalogs/`: materials and document types, which every portal reads (`/admin/catalogs/materials` and `/admin/catalogs/document-types`, one generic `CatalogSection` for both).
+- Lists show **every entry, active or not** (the public lists only carry the active ones). Admin queries live under their own key root (`adminCatalogs`), apart from the public `catalogs` one.
+- **Nothing is deleted.** Add (code + name), rename (the code is immutable: other records point at it), deactivate (asks first; stops new use in weighings, sales, accounts and sellers, hides it from the lists; what exists keeps working) and reactivate (one step).
+- The code format is checked before sending (materials `^[a-z][a-z0-9_]{1,29}$`, document types `^[A-Z][A-Z0-9]{1,9}$`) and the server answers `invalid_code` / `code_already_exists` otherwise; a failed action reloads the list.
+- Not built yet: warehouses (`/admin/warehouses`, with organization assignment) and rejection reasons (they arrive with the backend's applications module, 6.9).
+
 ## Status
 
-Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling, two-factor sign-in (TOTP, enrollment with QR, recovery codes), layout with menu and guards by capability, a home screen, the users module and the audit viewer. Next, one PR each, when the backend exposes them: applications (with the organization picker that completes users), then catalogs (users first; applications, catalogs and audit when the backend exposes them).
+Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling, two-factor sign-in (TOTP, enrollment with QR, recovery codes), layout with menu and guards by capability, a home screen, the users module, the audit viewer and the catalogs (materials and document types). Next, one PR each, when the backend exposes them: applications (with the organization picker that completes users) and warehouses.

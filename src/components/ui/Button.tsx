@@ -14,6 +14,8 @@ export interface ButtonProps {
   endIcon?: React.ReactNode
   onClick?: React.MouseEventHandler<HTMLButtonElement>
   type?: 'button' | 'submit' | 'reset'
+  /** Names the button when its text alone is ambiguous (the same action repeated on every row). */
+  'aria-label'?: string
   children?: React.ReactNode
   sx?: SxProps<Theme>
 }
@@ -29,6 +31,7 @@ export function Button({
   endIcon,
   onClick,
   type = 'button',
+  'aria-label': ariaLabel,
   children,
   sx,
 }: ButtonProps) {
@@ -49,6 +52,7 @@ export function Button({
       endIcon={loading ? undefined : endIcon}
       onClick={onClick}
       type={type}
+      aria-label={ariaLabel}
       sx={sx}
     >
       {loading ? <Loader size={18} color="inherit" /> : children}
