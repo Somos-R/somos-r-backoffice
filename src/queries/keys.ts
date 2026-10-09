@@ -14,6 +14,15 @@ export interface UsersListKey {
   rowsPerPage: number
 }
 
+/** Filters of the review queue; '' means "no filter" (the default status filter is the open queue). */
+export interface ApplicationsListKey {
+  status: string
+  type: string
+  search: string
+  page: number
+  rowsPerPage: number
+}
+
 /** Filters of the audit trail. Empty strings mean "no filter"; `since`/`until` are ISO 8601. */
 export interface AuditListKey {
   action: string
@@ -45,6 +54,12 @@ export const queryKeys = {
   adminCatalogs: {
     all: ['adminCatalogs'] as const,
     list: (kind: CatalogKind) => ['adminCatalogs', kind] as const,
+  },
+
+  applications: {
+    all: ['applications'] as const,
+    list: (filters: ApplicationsListKey) => ['applications', 'list', filters] as const,
+    detail: (id: string) => ['applications', 'detail', id] as const,
   },
 
   audit: {

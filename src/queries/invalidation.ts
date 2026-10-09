@@ -11,6 +11,8 @@ import { queryKeys } from './keys'
 export const AFFECTED = {
   /** An account was deactivated, unlocked, signed out, sent a new invitation or given another role. */
   userChanged: [queryKeys.users.all],
+  /** An application was taken or decided. Approving also creates the first administrator account. */
+  applicationChanged: [queryKeys.applications.all, queryKeys.users.all],
   /** A material or document type was added, renamed, deactivated or reactivated. */
   catalogChanged: [queryKeys.adminCatalogs.all],
 } as const satisfies Record<string, readonly QueryKey[]>

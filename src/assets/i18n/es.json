@@ -78,13 +78,20 @@
     "invitation_not_pending": "Esa persona ya activó su cuenta.",
     "invalid_role": "Ese rol no es válido para este tipo de cuenta.",
     "code_already_exists": "Ya existe un elemento con ese código.",
-    "invalid_code": "El código no tiene el formato permitido."
+    "invalid_code": "El código no tiene el formato permitido.",
+    "already_in_review": "Otra persona ya está revisando esta solicitud.",
+    "application_not_reviewable": "Esta solicitud ya no está esperando revisión.",
+    "applicant_account_conflict": "El correo o el documento de quien aplica ya pertenece a otra cuenta.",
+    "organization_already_registered": "Ya existe una organización activa con ese NIT.",
+    "documents_not_approved": "Faltan documentos obligatorios por aprobar.",
+    "registration_closed": "El registro de ECA y asociaciones está cerrado: se hace por solicitud."
   },
   "nav": {
     "home": "Inicio",
     "users": "Usuarios",
     "audit": "Auditoría",
-    "catalogs": "Catálogos"
+    "catalogs": "Catálogos",
+    "applications": "Solicitudes"
   },
   "sidebar": {
     "brand": "Somos R",
@@ -437,6 +444,106 @@
       "deactivated": "{{name}} fue desactivado",
       "reactivated": "{{name}} fue reactivado",
       "error": "No pudimos completar la acción"
+    }
+  },
+  "applications": {
+    "title": "Solicitudes",
+    "subtitle": "Registros de ECA y asociaciones esperando revisión",
+    "searchPlaceholder": "Buscar por organización, NIT o solicitante...",
+    "statusLabel": "Estado",
+    "openQueue": "Pendientes de revisar",
+    "typeLabel": "Tipo",
+    "allTypes": "Todos los tipos",
+    "countSingular": "solicitud",
+    "countPlural": "solicitudes",
+    "empty": "No hay solicitudes en esta vista.",
+    "emptySearch": "Sin resultados para \"{{query}}\"",
+    "none": "—",
+    "view": "Ver",
+    "submissionCount": "Envío {{count}}",
+    "status": {
+      "submitted": "Enviada",
+      "in_review": "En revisión",
+      "changes_requested": "Con cambios pedidos",
+      "approved": "Aprobada",
+      "rejected": "Rechazada"
+    },
+    "types": {
+      "eca": "ECA",
+      "association": "Asociación"
+    },
+    "table": {
+      "organization": "Organización",
+      "type": "Tipo",
+      "applicant": "Solicitante",
+      "status": "Estado",
+      "submitted": "Enviada",
+      "reviewer": "Revisa",
+      "actions": "Acciones"
+    },
+    "detail": {
+      "loadError": "No pudimos cargar la solicitud.",
+      "heldBy": "{{name}} ya tomó esta solicitud.",
+      "organization": "Organización",
+      "legalName": "Razón social",
+      "taxId": "NIT",
+      "legalRepresentative": "Representante legal",
+      "city": "Ciudad",
+      "address": "Dirección",
+      "contactEmail": "Correo de contacto",
+      "contactPhone": "Teléfono de contacto",
+      "applicant": "Quien aplica",
+      "name": "Nombre",
+      "email": "Correo",
+      "document": "Documento",
+      "phone": "Teléfono",
+      "emailVerified": "Correo verificado",
+      "consent": "Consentimiento de datos",
+      "submitted": "Enviada",
+      "yes": "Sí",
+      "no": "No",
+      "history": "Historial de revisión",
+      "noHistory": "Aún no tiene decisiones.",
+      "reviewMeta": "Envío {{number}} · {{name}} · {{date}}",
+      "decisions": {
+        "approved": "Aprobada",
+        "changes_requested": "Cambios pedidos",
+        "rejected": "Rechazada"
+      },
+      "closeButton": "Cerrar"
+    },
+    "actions": {
+      "startReview": "Tomar revisión",
+      "decide": "Decidir"
+    },
+    "decision": {
+      "title": "Decidir la solicitud",
+      "label": "Decisión",
+      "options": {
+        "approve": "Aprobar",
+        "request_changes": "Pedir cambios",
+        "reject": "Rechazar"
+      },
+      "help": {
+        "approve": "Se crea la cuenta del primer administrador y recibe por correo el enlace para activarla. No se puede aprobar mientras falten documentos obligatorios.",
+        "request_changes": "La persona recibe tu resumen, corrige y vuelve a enviar. Conserva su antigüedad en la cola.",
+        "reject": "La solicitud se cierra. La persona recibe tu resumen."
+      },
+      "summaryOptional": "Resumen (opcional)",
+      "summaryRequired": "Resumen para quien aplica",
+      "summaryTooShort": "Escribe al menos {{min}} caracteres.",
+      "confirm": {
+        "approve": "Aprobar solicitud",
+        "request_changes": "Pedir cambios",
+        "reject": "Rechazar solicitud"
+      }
+    },
+    "messages": {
+      "taken": "Tomaste la solicitud para revisarla",
+      "approve": "Solicitud aprobada: se envió el enlace de activación",
+      "request_changes": "Pediste cambios a quien aplica",
+      "reject": "Solicitud rechazada",
+      "actionError": "No pudimos completar la acción"
     }
   }
 }

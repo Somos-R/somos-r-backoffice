@@ -5,4 +5,5 @@ import { lazy } from 'react'
 export const Home = lazy(() => import('./features/home/Home'))
 export const Audit = lazy(() => import('./features/audit/Audit'))
 export const Catalogs = lazy(() => import('./features/catalogs/Catalogs'))
+export const Applications = lazy(() => import('./features/applications/Applications'))
 export const Users = lazy(() => import('./features/users/Users'))
