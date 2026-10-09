@@ -9,6 +9,11 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: 'Guardar' })).toBeInTheDocument()
   })
 
+  it('takes an accessible name that replaces its text', () => {
+    render(<Button aria-label="Desactivar Ana">Desactivar</Button>)
+    expect(screen.getByRole('button', { name: 'Desactivar Ana' })).toBeInTheDocument()
+  })
+
   it('applies contained variant by default', () => {
     render(<Button>Click</Button>)
     const btn = screen.getByRole('button')

@@ -6,11 +6,13 @@ import { queryKeys } from './keys'
  * action (`invalidateAffected`) and when an action fails (`meta.refreshOnError`): if it failed, the
  * screen is probably showing outdated data of the same things.
  *
- * Catalogs never appear here: they don't change with any of these actions.
+ * The roles catalog never appears here: it doesn't change with any of these actions.
  */
 export const AFFECTED = {
   /** An account was deactivated, unlocked, signed out, sent a new invitation or given another role. */
   userChanged: [queryKeys.users.all],
+  /** A material or document type was added, renamed, deactivated or reactivated. */
+  catalogChanged: [queryKeys.adminCatalogs.all],
 } as const satisfies Record<string, readonly QueryKey[]>
 
 export function invalidateAffected(client: QueryClient, keys: readonly QueryKey[]) {

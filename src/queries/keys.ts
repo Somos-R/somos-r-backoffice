@@ -30,6 +30,8 @@ export interface AuditListKey {
   rowsPerPage: number
 }
 
+import type { CatalogKind } from '../services/adminCatalogs'
+
 export const queryKeys = {
   /** The signed-in Somos R account (`GET /admin/me`). */
   me: ['me'] as const,
@@ -37,6 +39,12 @@ export const queryKeys = {
   catalogs: {
     all: ['catalogs'] as const,
     roles: ['catalogs', 'roles'] as const,
+  },
+
+  /** Somos R's own view of the catalogs it maintains (includes the inactive entries). */
+  adminCatalogs: {
+    all: ['adminCatalogs'] as const,
+    list: (kind: CatalogKind) => ['adminCatalogs', kind] as const,
   },
 
   audit: {
