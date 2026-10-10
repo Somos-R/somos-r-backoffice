@@ -1,5 +1,5 @@
 import { t } from '../../lib/i18n'
-import type { ApplicationStatus } from '../../services/applications'
+import type { ApplicationStatus, DocumentSlot, DocumentStatus } from '../../services/applications'
 
 /** Everything a status filter can ask for; "no filter" is the open queue. */
 export const STATUS_FILTERS: ApplicationStatus[] = ['submitted', 'in_review', 'changes_requested', 'approved', 'rejected']
@@ -18,6 +18,25 @@ export const typeLabel = (type: string): string => (t.applications.types as Reco
 
 /** Only these can be taken or decided; the server answers `application_not_reviewable` otherwise. */
 export const isReviewable = (status: string): boolean => status === 'submitted' || status === 'in_review'
+
+export const DOCUMENT_COLOR: Record<DocumentStatus, 'warning' | 'success' | 'error' | 'default'> = {
+  pending: 'warning',
+  ok: 'success',
+  missing: 'error',
+  not_compliant: 'error',
+}
+
+export const documentStatusLabel = (status: string): string => (t.applications.documents.status as Record<string, string>)[status] ?? status
+
+/** The comment the applicant reads when a document is not accepted. */
+export const MAX_COMMENT_LENGTH = 500
+
+/** Required documents that are not approved yet: the server refuses to approve the application while any remains. */
+export const unapprovedRequired = (slots: DocumentSlot[]): DocumentSlot[] =>
+  slots.filter((slot) => slot.document_type.is_required && slot.document?.status !== 'ok')
+
+export const formatBytes = (bytes: number): string =>
+  bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 
 /** The summary the server demands to ask for changes or to reject. */
 export const MIN_SUMMARY_LENGTH = 10
