@@ -91,7 +91,8 @@
     "users": "Usuarios",
     "audit": "Auditoría",
     "catalogs": "Catálogos",
-    "applications": "Solicitudes"
+    "applications": "Solicitudes",
+    "organizations": "Organizaciones"
   },
   "sidebar": {
     "brand": "Somos R",
@@ -544,6 +545,72 @@
       "request_changes": "Pediste cambios a quien aplica",
       "reject": "Solicitud rechazada",
       "actionError": "No pudimos completar la acción"
+    }
+  },
+  "organizations": {
+    "title": "Organizaciones",
+    "subtitle": "ECA y asociaciones de la plataforma, con su gente y sus vínculos",
+    "searchPlaceholder": "Buscar por nombre, NIT, correo o representante...",
+    "typeLabel": "Tipo",
+    "allTypes": "Todos los tipos",
+    "statusLabel": "Estado",
+    "allStatuses": "Todos los estados",
+    "countSingular": "organización",
+    "countPlural": "organizaciones",
+    "empty": "Aún no hay organizaciones.",
+    "emptySearch": "Sin resultados para \"{{query}}\"",
+    "none": "—",
+    "view": "Ver",
+    "types": {
+      "eca": "ECA",
+      "association": "Asociación"
+    },
+    "status": {
+      "draft": "Borrador",
+      "submitted": "Enviada",
+      "in_review": "En revisión",
+      "changes_requested": "Con cambios pedidos",
+      "approved": "Aprobada",
+      "rejected": "Rechazada",
+      "suspended": "Suspendida"
+    },
+    "linkStatus": {
+      "requested": "Solicitado",
+      "active": "Activo",
+      "rejected": "Rechazado",
+      "removed": "Retirado"
+    },
+    "table": {
+      "organization": "Organización",
+      "type": "Tipo",
+      "status": "Estado",
+      "staff": "Personal",
+      "links": "Vínculos activos",
+      "approved": "Aprobada",
+      "actions": "Acciones"
+    },
+    "detail": {
+      "loadError": "No pudimos cargar la organización.",
+      "profile": "Perfil",
+      "taxId": "NIT",
+      "legalRepresentative": "Representante legal",
+      "city": "Ciudad",
+      "address": "Dirección",
+      "contactEmail": "Correo de contacto",
+      "contactPhone": "Teléfono de contacto",
+      "created": "Creada",
+      "approved": "Aprobada",
+      "recyclers": "Recicladores",
+      "staff": "Personal ({{count}})",
+      "noStaff": "Aún no tiene personal.",
+      "links": "Vínculos ({{count}})",
+      "noLinks": "Sin vínculos.",
+      "requestedOn": "solicitado {{date}}",
+      "decidedOn": "decidido {{date}}",
+      "warehouses": "Bodegas ({{count}})",
+      "noWarehouses": "Sin bodegas.",
+      "inactive": "Desactivada",
+      "closeButton": "Cerrar"
     }
   }
 }

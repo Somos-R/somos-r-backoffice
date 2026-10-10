@@ -1,5 +1,5 @@
-import { ClipboardCheck, LayoutDashboard, ListChecks, ScrollText, Users as UsersIcon } from 'lucide-react'
-import { Applications, Audit, Catalogs, Home, Users } from './lazyPages'
+import { Building2, ClipboardCheck, LayoutDashboard, ListChecks, ScrollText, Users as UsersIcon } from 'lucide-react'
+import { Applications, Audit, Catalogs, Home, Organizations, Users } from './lazyPages'
 import { t } from './lib/i18n'
 import type { Permission } from './lib/permissions'
 
@@ -17,6 +17,7 @@ export interface AppRoute {
 export const APP_ROUTES: AppRoute[] = [
   { path: '/', permission: 'home.view', label: t.nav.home, icon: <LayoutDashboard size={20} />, element: <Home /> },
   { path: '/solicitudes', permission: 'organizations.review', label: t.nav.applications, icon: <ClipboardCheck size={20} />, element: <Applications /> },
+  { path: '/organizaciones', permission: 'organizations.review', label: t.nav.organizations, icon: <Building2 size={20} />, element: <Organizations /> },
   { path: '/usuarios', permission: 'users.manage', label: t.nav.users, icon: <UsersIcon size={20} />, element: <Users /> },
   { path: '/catalogos', permission: 'catalogs.manage', label: t.nav.catalogs, icon: <ListChecks size={20} />, element: <Catalogs /> },
   { path: '/auditoria', permission: 'audit.read', label: t.nav.audit, icon: <ScrollText size={20} />, element: <Audit /> },

@@ -92,6 +92,14 @@ The QR library (`qrcode.react`) is lazy-loaded with the enrollment step, so it i
 - **Decide** (`POST .../decision`): approve, request changes or reject. Asking for changes or rejecting **requires a summary of 10+ characters** (checked here, the server answers 422 otherwise); approving takes an optional one, creates the first administrator and emails the activation link. Only *submitted* and *in review* can be decided. The summary travels as a mutation variable (the dialog clears it right after confirming). A refusal (`documents_not_approved`, `application_not_reviewable`, `applicant_account_conflict`, `organization_already_registered`) is explained and reloads the queue and the detail; approving also reloads users (a new account appears).
 - Not built yet: the documents of the application (open each file through a signed link and approve it) and the organizations module.
 
+## Organizations (`/organizaciones`, capability `organizations.review`)
+
+`features/organizations/`: **read-only** view of every ECA and Association (`/admin/organizations`), whatever stage of the onboarding it is in.
+- **List**: type, stage (draft, submitted, in review, changes requested, approved, rejected, suspended), text search (name, tax id, email or representative, debounced, 2 characters), server pagination; each row shows how many people work there and how many active links it has.
+- **Detail** (`GET /admin/organizations/{id}`): the server **audits every open**, so it is fetched each time (`staleTime: 0`). Profile, staff (reusing the users module's states and the roles catalog), links with the other side and the rejection reason, and what only some have: recyclers (Associations) or warehouses (ECAs).
+- No actions on purpose: accounts are managed in Users, onboarding in Applications.
+- Not built yet: the required-documents catalog (inside Catalogs) and warehouses.
+
 ## Status
 
 Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling, two-factor sign-in (TOTP, enrollment with QR, recovery codes), layout with menu and guards by capability, a home screen, the users module, the audit viewer, the catalogs (materials and document types) and the applications queue with its decision. Next, one PR each: the documents of an application, the organizations (read-only), the required-documents catalog and warehouses.

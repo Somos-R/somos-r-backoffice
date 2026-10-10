@@ -23,6 +23,15 @@ export interface ApplicationsListKey {
   rowsPerPage: number
 }
 
+/** Filters of the organizations list; '' means "no filter". */
+export interface OrganizationsListKey {
+  status: string
+  type: string
+  search: string
+  page: number
+  rowsPerPage: number
+}
+
 /** Filters of the audit trail. Empty strings mean "no filter"; `since`/`until` are ISO 8601. */
 export interface AuditListKey {
   action: string
@@ -60,6 +69,12 @@ export const queryKeys = {
     all: ['applications'] as const,
     list: (filters: ApplicationsListKey) => ['applications', 'list', filters] as const,
     detail: (id: string) => ['applications', 'detail', id] as const,
+  },
+
+  organizations: {
+    all: ['organizations'] as const,
+    list: (filters: OrganizationsListKey) => ['organizations', 'list', filters] as const,
+    detail: (id: string) => ['organizations', 'detail', id] as const,
   },
 
   audit: {
