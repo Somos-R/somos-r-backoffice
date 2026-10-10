@@ -7,12 +7,13 @@ import {
 } from '../../components/ui'
 import { applicationsQueries } from '../../queries/applications'
 import { AFFECTED, invalidateAffected } from '../../queries/invalidation'
+import ApplicationDocuments from './ApplicationDocuments'
 import { applicationsService, type ApplicationDecision, type ApplicationReview } from '../../services/applications'
 import { useAuth } from '../../hooks/useAuth'
 import { getApiErrorMessage } from '../../lib/apiError'
 import { t, interpolate } from '../../lib/i18n'
 import {
-  MAX_SUMMARY_LENGTH, MIN_SUMMARY_LENGTH, STATUS_COLOR, formatDate, isReviewable, statusLabel, typeLabel,
+  MAX_SUMMARY_LENGTH, MIN_SUMMARY_LENGTH, STATUS_COLOR, formatDate, isReviewable, statusLabel, typeLabel, unapprovedRequired, documentStatusLabel,
 } from './applicationStatus'
 
 interface Props {
@@ -77,6 +78,9 @@ export default function ApplicationDetailDialog({ applicationId, onClose, onNoti
     onError: failed,
   })
 
+  // The server refuses to approve while a required document is not approved: say so up front.
+  const blocking = application ? unapprovedRequired(application.documents) : []
+  const approvalBlocked = decision === 'approve' && blocking.length > 0
   const needsSummary = decision !== 'approve'
   const confirmDecision = () => {
     const text = summary.trim()
@@ -143,7 +147,7 @@ export default function ApplicationDetailDialog({ applicationId, onClose, onNoti
                 <Box component="dl" sx={{ m: 0, display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 1.5 }}>
                   <Field label={t.applications.detail.name}>{application.applicant_name}</Field>
                   <Field label={t.applications.detail.email}>{application.applicant_email}</Field>
-                  <Field label={t.applications.detail.document}>{`${application.applicant_id_type} ${application.applicant_id_number}`}</Field>
+                  <Field label={t.applications.detail.document}>{application.applicant_id_number ? `${application.applicant_id_type ?? ''} ${application.applicant_id_number}`.trim() : t.applications.none}</Field>
                   <Field label={t.applications.detail.phone}>{application.applicant_phone ?? t.applications.none}</Field>
                   <Field label={t.applications.detail.emailVerified}>
                     {application.email_verified_at ? formatDate(application.email_verified_at) : t.applications.detail.no}
@@ -158,6 +162,13 @@ export default function ApplicationDetailDialog({ applicationId, onClose, onNoti
                   )}
                 </Box>
               </Box>
+
+              <ApplicationDocuments
+                applicationId={applicationId}
+                slots={application.documents}
+                canReview={reviewable}
+                onNotify={onNotify}
+              />
 
               <Box component="section" aria-labelledby="application-history">
                 <Typography id="application-history" variant="subtitle2" component="h2" fontWeight={600} mb={1}>
@@ -180,6 +191,15 @@ export default function ApplicationDetailDialog({ applicationId, onClose, onNoti
                           </Typography>
                         </Box>
                         {review.summary && <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>{review.summary}</Typography>}
+                        {review.details.length > 0 && (
+                          <Box component="ul" sx={{ m: 0, mt: 0.5, pl: 2.5 }}>
+                            {review.details.map((sentBack) => (
+                              <Typography component="li" variant="caption" color="text.secondary" key={sentBack.code}>
+                                {`${sentBack.label}: ${documentStatusLabel(sentBack.status)}${sentBack.comment ? ` · ${sentBack.comment}` : ''}`}
+                              </Typography>
+                            ))}
+                          </Box>
+                        )}
                       </Box>
                     ))}
                   </Box>
@@ -217,6 +237,11 @@ export default function ApplicationDetailDialog({ applicationId, onClose, onNoti
               disabled={decide.isPending}
             />
             <Typography variant="body2" color="text.secondary">{t.applications.decision.help[decision]}</Typography>
+            {approvalBlocked && (
+              <Alert severity="warning">
+                {interpolate(t.applications.decision.blocked, { documents: blocking.map((slot) => slot.document_type.label).join(', ') })}
+              </Alert>
+            )}
             <Input
               label={needsSummary ? t.applications.decision.summaryRequired : t.applications.decision.summaryOptional}
               value={summary}
@@ -234,6 +259,7 @@ export default function ApplicationDetailDialog({ applicationId, onClose, onNoti
           <Button
             variant={decision === 'approve' ? 'contained' : 'destructive'}
             loading={decide.isPending}
+            disabled={approvalBlocked}
             onClick={confirmDecision}
           >
             {t.applications.decision.confirm[decision]}

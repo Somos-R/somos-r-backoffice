@@ -28,6 +28,37 @@ export interface ApplicationListResponse {
   items: ApplicationSummary[]
 }
 
+export type DocumentStatus = 'pending' | 'ok' | 'missing' | 'not_compliant'
+/** A verdict on one document; `missing` and `not_compliant` need a comment the applicant will read. */
+export type DocumentVerdict = Exclude<DocumentStatus, 'pending'>
+
+/** What was uploaded for a requested document. */
+export interface ReviewedDocument {
+  id: string
+  original_name: string
+  content_type: string
+  size_bytes: number
+  uploaded_at: string
+  status: DocumentStatus
+  review_comment: string | null
+  reviewed_at: string | null
+  reviewed_by: { id: string; full_name: string } | null
+}
+
+/** A document the organization is asked for, and what it uploaded (or null). */
+export interface DocumentSlot {
+  document_type: { code: string; label: string; is_required: boolean }
+  document: ReviewedDocument | null
+}
+
+/** A document sent back with a review, as it was then. */
+export interface SentBackDocument {
+  code: string
+  label: string
+  status: string
+  comment: string | null
+}
+
 /** One earlier decision on the application. */
 export interface ApplicationReview {
   id: string
@@ -35,7 +66,7 @@ export interface ApplicationReview {
   summary: string | null
   submission_number: number
   /** Documents with a problem, when changes were requested. */
-  details: unknown[]
+  details: SentBackDocument[]
   created_at: string
   reviewer: { id: string; full_name: string } | null
 }
@@ -46,12 +77,13 @@ export interface ApplicationDetail extends ApplicationSummary {
   contact_email: string | null
   contact_phone: string | null
   address: string | null
-  applicant_id_type: string
-  applicant_id_number: string
+  applicant_id_type: string | null
+  applicant_id_number: string | null
   applicant_phone: string | null
   email_verified_at: string | null
   consent_at: string | null
   consent_version: string | null
+  documents: DocumentSlot[]
   reviews: ApplicationReview[]
 }
 
@@ -61,6 +93,12 @@ export interface ApplicationsListParams {
   q?: string
   limit?: number
   offset?: number
+}
+
+/** A signed link, valid for a few minutes. `url` is a PATH of the API, not a full address. */
+export interface DocumentAccess {
+  url: string
+  expires_at: string
 }
 
 export const applicationsService = {
@@ -74,6 +112,14 @@ export const applicationsService = {
   /** Takes it (submitted → in review). 409 `already_in_review` when someone else has it. */
   startReview: (id: string): Promise<ApplicationDetail> =>
     apiClient.post(`/admin/applications/${id}/start-review`).then((r) => r.data),
+
+  /** Asks for a signed link to the file (this is the act of viewing it, and the server audits it). */
+  openDocument: (id: string, documentId: string): Promise<DocumentAccess> =>
+    apiClient.post(`/admin/applications/${id}/documents/${documentId}/access`).then((r) => r.data),
+
+  /** Only while the application is submitted or in review; 422 `comment_required` without a comment on a problem. */
+  reviewDocument: (id: string, documentId: string, payload: { status: DocumentVerdict; comment?: string }): Promise<DocumentSlot> =>
+    apiClient.patch(`/admin/applications/${id}/documents/${documentId}`, payload).then((r) => r.data),
 
   /**
    * `request_changes` and `reject` need a summary of at least 10 characters. `approve` creates the first

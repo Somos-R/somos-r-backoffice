@@ -84,7 +84,9 @@
     "applicant_account_conflict": "El correo o el documento de quien aplica ya pertenece a otra cuenta.",
     "organization_already_registered": "Ya existe una organización activa con ese NIT.",
     "documents_not_approved": "Faltan documentos obligatorios por aprobar.",
-    "registration_closed": "El registro de ECA y asociaciones está cerrado: se hace por solicitud."
+    "registration_closed": "El registro de ECA y asociaciones está cerrado: se hace por solicitud.",
+    "comment_required": "Escribe el comentario: es lo que lee quien aplica.",
+    "invalid_document_link": "El enlace del documento venció o ya no es válido. Ábrelo de nuevo."
   },
   "nav": {
     "home": "Inicio",
@@ -536,7 +538,8 @@
         "approve": "Aprobar solicitud",
         "request_changes": "Pedir cambios",
         "reject": "Rechazar solicitud"
-      }
+      },
+      "blocked": "No se puede aprobar todavía: faltan por aprobar {{documents}}."
     },
     "messages": {
       "taken": "Tomaste la solicitud para revisarla",
@@ -544,6 +547,38 @@
       "request_changes": "Pediste cambios a quien aplica",
       "reject": "Solicitud rechazada",
       "actionError": "No pudimos completar la acción"
+    },
+    "documents": {
+      "title": "Documentos",
+      "none": "Esta solicitud no pide documentos.",
+      "required": "Obligatorio",
+      "optional": "Opcional",
+      "notUploaded": "Sin cargar",
+      "status": {
+        "pending": "Por revisar",
+        "ok": "Aprobado",
+        "missing": "Falta",
+        "not_compliant": "No cumple"
+      },
+      "fileMeta": "{{name}} · {{size}} · cargado {{date}}",
+      "reviewedBy": "Revisado por {{name}} · {{date}}",
+      "open": "Abrir",
+      "approve": "Aprobar",
+      "notCompliant": "No cumple",
+      "missing": "Falta",
+      "verdictTitle": {
+        "not_compliant": "Marcar como no cumple",
+        "missing": "Marcar como faltante"
+      },
+      "verdictHelp": "Quien aplica lee este comentario para corregir el documento.",
+      "commentLabel": "Comentario",
+      "commentRequired": "Escribe un comentario.",
+      "confirmVerdict": "Guardar",
+      "messages": {
+        "ok": "Documento aprobado",
+        "missing": "Documento marcado como faltante",
+        "not_compliant": "Documento marcado como no cumple"
+      }
     }
   }
 }
