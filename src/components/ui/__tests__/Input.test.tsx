@@ -52,6 +52,11 @@ describe('Input', () => {
     expect(screen.getByRole('textbox')).toBeRequired()
   })
 
+  it('renders a text area when multiline', () => {
+    render(<Input label="Resumen" multiline minRows={3} />)
+    expect(screen.getByLabelText('Resumen').tagName).toBe('TEXTAREA')
+  })
+
   it('passes the autofill and keyboard hints to the input', () => {
     render(<Input label="Code" autoComplete="one-time-code" inputMode="numeric" autoFocus />)
     const input = screen.getByLabelText('Code')

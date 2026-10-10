@@ -21,6 +21,9 @@ export interface InputProps {
   autoComplete?: string
   inputMode?: 'text' | 'numeric' | 'email' | 'tel'
   autoFocus?: boolean
+  /** A text area that grows from `minRows` lines (a free-text reason, a summary). */
+  multiline?: boolean
+  minRows?: number
   sx?: SxProps<Theme>
 }
 
@@ -41,6 +44,8 @@ export function Input({
   autoComplete,
   inputMode,
   autoFocus,
+  multiline,
+  minRows,
   sx,
 }: InputProps) {
   return (
@@ -58,6 +63,8 @@ export function Input({
       size={size}
       sx={sx}
       autoFocus={autoFocus}
+      multiline={multiline}
+      minRows={multiline ? minRows : undefined}
       slotProps={{
         // A date field always shows its format, so the label must not sit on top of it.
         inputLabel: type === 'date' ? { shrink: true } : undefined,
