@@ -15,6 +15,8 @@ export const AFFECTED = {
   applicationChanged: [queryKeys.applications.all, queryKeys.users.all],
   /** A material or document type was added, renamed, deactivated or reactivated. */
   catalogChanged: [queryKeys.adminCatalogs.all],
+  /** A required document was added, edited, reordered, deactivated or reactivated. */
+  organizationDocumentChanged: [queryKeys.organizationDocuments.all],
 } as const satisfies Record<string, readonly QueryKey[]>
 
 export function invalidateAffected(client: QueryClient, keys: readonly QueryKey[]) {

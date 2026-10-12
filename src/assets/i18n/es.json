@@ -449,6 +449,32 @@
       "error": "No pudimos completar la acción"
     }
   },
+  "organizationDocuments": {
+    "title": "Documentos requeridos",
+    "subtitle": "Lo que se le pide a una ECA o Asociación al aplicar. Solo afecta a las solicitudes que se envíen de aquí en adelante: lo ya subido se conserva.",
+    "add": "Pedir documento",
+    "drawerTitle": "Pedir documento",
+    "codeLabel": "Código",
+    "codeHelp": "No se puede cambiar después.",
+    "codeFormat": "Usa minúsculas, números y guion bajo; empieza con una letra (2 a 40 caracteres).",
+    "nameLabel": "Nombre",
+    "organizationTypeLabel": "Tipo de organización",
+    "organizationTypeHelp": "No se puede cambiar después.",
+    "requiredLabel": "Obligatorio",
+    "sortOrderLabel": "Orden",
+    "edit": "Editar documento",
+    "deactivateTitle": "Desactivar documento",
+    "deactivateMessage": "Dejará de pedirse en las solicitudes nuevas. Lo ya subido contra este documento se conserva.",
+    "empty": "Aún no hay documentos pedidos.",
+    "table": {
+      "name": "Documento",
+      "organizationType": "Tipo",
+      "required": "Obligatorio",
+      "optional": "Opcional",
+      "order": "Orden",
+      "actions": "Acciones"
+    }
+  },
   "applications": {
     "title": "Solicitudes",
     "subtitle": "Registros de ECA y asociaciones esperando revisión",

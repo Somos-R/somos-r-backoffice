@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import CatalogSection from './CatalogSection'
+import OrganizationDocumentsSection from './OrganizationDocumentsSection'
 import { Snackbar } from '../../components/ui'
 import { t } from '../../lib/i18n'
 
@@ -22,6 +23,7 @@ export default function Catalogs() {
 
       <CatalogSection kind="materials" onNotify={notify} />
       <CatalogSection kind="document-types" onNotify={notify} />
+      <OrganizationDocumentsSection onNotify={notify} />
 
       <Snackbar
         open={snackbar.open}

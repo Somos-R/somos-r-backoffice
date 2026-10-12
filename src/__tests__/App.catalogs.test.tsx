@@ -15,9 +15,11 @@ import { fakeJwt, mockAdapter } from '../test/helpers'
 // Nothing is deleted: an entry is deactivated, which only stops new use.
 
 interface Entry { code: string; label: string; unit?: string; is_active: boolean }
+interface OrgDocEntry { code: string; label: string; organization_type: 'eca' | 'association'; is_required: boolean; is_active: boolean; sort_order: number }
 
 let MATERIALS: Entry[]
 let TYPES: Entry[]
+let ORG_DOCS: OrgDocEntry[]
 
 interface Recorded { method: string; url: string; body: unknown }
 let requests: Recorded[]
@@ -33,6 +35,22 @@ function serve(capabilities: string[] = ['catalogs.manage']) {
 
     if (url === '/admin/me') {
       return { data: { id: 'me', email: 'me@somosr.co', full_name: 'Ana Plataforma', role_code: 'platform_admin', capabilities, mfa_enabled: true, recovery_codes_remaining: 8 } }
+    }
+    const orgDocRoute = url.match(/^\/admin\/catalogs\/organization-documents(?:\/([^/]+))?$/)
+    if (orgDocRoute) {
+      if (method === 'GET') return { data: ORG_DOCS }
+      if (failure) return { status: failure.status, data: { detail: 'x', code: failure.code } }
+      if (method === 'POST') {
+        const entry: OrgDocEntry = {
+          code: body.code, label: body.label, organization_type: body.organization_type,
+          is_required: body.is_required, is_active: true, sort_order: body.sort_order,
+        }
+        ORG_DOCS.push(entry)
+        return { status: 201, data: entry }
+      }
+      const entry = ORG_DOCS.find((e) => e.code === orgDocRoute[1])!
+      Object.assign(entry, body)
+      return { data: entry }
     }
     const route = url.match(/^\/admin\/catalogs\/(materials|document-types)(?:\/([^/]+))?$/)
     if (!route) return { data: {} }
@@ -75,6 +93,10 @@ beforeEach(() => {
   TYPES = [
     { code: 'CC', label: 'Cédula de Ciudadanía', is_active: true },
     { code: 'PA', label: 'Pasaporte', is_active: true },
+  ]
+  ORG_DOCS = [
+    { code: 'assoc_rut', label: 'RUT', organization_type: 'association', is_required: true, is_active: true, sort_order: 0 },
+    { code: 'eca_habilitacion', label: 'Habilitación SSPD', organization_type: 'eca', is_required: false, is_active: false, sort_order: 1 },
   ]
 })
 
@@ -197,6 +219,103 @@ describe('catalogs screen', () => {
   })
 })
 
+describe('required documents section', () => {
+  it('lists documents ordered, with type, required/optional and status', async () => {
+    serve()
+    renderAt('/catalogos')
+    const docs = await section(t.organizationDocuments.title)
+    const rut = await docs.findByRole('row', { name: /RUT/ })
+    expect(within(rut).getByText(t.organizations.types.association)).toBeInTheDocument()
+    expect(within(rut).getByText(t.organizationDocuments.table.required)).toBeInTheDocument()
+    expect(within(rut).getByText(t.catalogs.status.active)).toBeInTheDocument()
+
+    const habilitacion = await docs.findByRole('row', { name: /Habilitación SSPD/ })
+    expect(within(habilitacion).getByText(t.organizations.types.eca)).toBeInTheDocument()
+    expect(within(habilitacion).getByText(t.organizationDocuments.table.optional)).toBeInTheDocument()
+    expect(within(habilitacion).getByText(t.catalogs.status.inactive)).toBeInTheDocument()
+  })
+
+  it('asks for a document with its type of organization', async () => {
+    serve()
+    renderAt('/catalogos')
+    const docs = await section(t.organizationDocuments.title)
+    await userEvent.click(await docs.findByRole('button', { name: t.organizationDocuments.add }))
+    const drawer = within(await screen.findByRole('presentation'))
+    await userEvent.type(drawer.getByLabelText(new RegExp(t.organizationDocuments.codeLabel)), 'eca_rut')
+    await userEvent.type(drawer.getByLabelText(new RegExp(t.organizationDocuments.nameLabel)), ' RUT de la ECA ')
+    await userEvent.click(drawer.getByLabelText(new RegExp(t.organizationDocuments.organizationTypeLabel)))
+    await userEvent.click(await screen.findByRole('option', { name: t.organizations.types.eca }))
+    await userEvent.click(drawer.getByRole('button', { name: t.ui.formDrawer.save }))
+
+    await waitFor(() => expect(to('POST', '/admin/catalogs/organization-documents')).toHaveLength(1))
+    expect(to('POST', '/admin/catalogs/organization-documents')[0].body).toEqual({
+      code: 'eca_rut', label: 'RUT de la ECA', organization_type: 'eca', is_required: true, sort_order: 0,
+    })
+    expect(await screen.findByText('RUT de la ECA fue agregado')).toBeInTheDocument()
+  })
+
+  it('does not send a code in the wrong format', async () => {
+    serve()
+    renderAt('/catalogos')
+    const docs = await section(t.organizationDocuments.title)
+    await userEvent.click(await docs.findByRole('button', { name: t.organizationDocuments.add }))
+    const drawer = within(await screen.findByRole('presentation'))
+    await userEvent.type(drawer.getByLabelText(new RegExp(t.organizationDocuments.codeLabel)), 'RUT')
+    await userEvent.type(drawer.getByLabelText(new RegExp(t.organizationDocuments.nameLabel)), 'RUT')
+    await userEvent.click(drawer.getByLabelText(new RegExp(t.organizationDocuments.organizationTypeLabel)))
+    await userEvent.click(await screen.findByRole('option', { name: t.organizations.types.association }))
+    await userEvent.click(drawer.getByRole('button', { name: t.ui.formDrawer.save }))
+    expect(await drawer.findByText(t.organizationDocuments.codeFormat)).toBeInTheDocument()
+    expect(to('POST', '/admin/catalogs/organization-documents')).toHaveLength(0)
+  })
+
+  it('edits the name, the order and whether it is required, without touching the code or type', async () => {
+    serve()
+    renderAt('/catalogos')
+    const docs = await section(t.organizationDocuments.title)
+    await userEvent.click(await docs.findByRole('button', { name: `${t.catalogs.actions.edit} RUT` }))
+    const dialog = within(await screen.findByRole('dialog'))
+
+    const nameInput = dialog.getByLabelText(t.organizationDocuments.nameLabel)
+    await userEvent.clear(nameInput)
+    await userEvent.type(nameInput, 'RUT vigente')
+
+    const orderInput = dialog.getByLabelText(t.organizationDocuments.sortOrderLabel)
+    await userEvent.clear(orderInput)
+    await userEvent.type(orderInput, '5')
+
+    await userEvent.click(dialog.getByLabelText(t.organizationDocuments.requiredLabel))
+    await userEvent.click(dialog.getByRole('button', { name: t.catalogs.actions.save }))
+
+    await waitFor(() => expect(to('PATCH', '/admin/catalogs/organization-documents/assoc_rut')).toHaveLength(1))
+    expect(to('PATCH', '/admin/catalogs/organization-documents/assoc_rut')[0].body).toEqual({
+      label: 'RUT vigente', is_required: false, sort_order: 5,
+    })
+    expect(await screen.findByText('Cambios guardados en RUT vigente')).toBeInTheDocument()
+  })
+
+  it('asks before deactivating and explains what stays', async () => {
+    serve()
+    renderAt('/catalogos')
+    const docs = await section(t.organizationDocuments.title)
+    await userEvent.click(await docs.findByRole('button', { name: `${t.catalogs.actions.deactivate} RUT` }))
+    const dialog = within(await screen.findByRole('dialog'))
+    expect(dialog.getByText(t.organizationDocuments.deactivateMessage)).toBeInTheDocument()
+    await userEvent.click(dialog.getByRole('button', { name: t.catalogs.actions.deactivate }))
+    await waitFor(() => expect(to('PATCH', '/admin/catalogs/organization-documents/assoc_rut')).toHaveLength(1))
+    expect(to('PATCH', '/admin/catalogs/organization-documents/assoc_rut')[0].body).toEqual({ is_active: false })
+  })
+
+  it('reactivates in one step', async () => {
+    serve()
+    renderAt('/catalogos')
+    const docs = await section(t.organizationDocuments.title)
+    await userEvent.click(await docs.findByRole('button', { name: `${t.catalogs.actions.reactivate} Habilitación SSPD` }))
+    await waitFor(() => expect(to('PATCH', '/admin/catalogs/organization-documents/eca_habilitacion')).toHaveLength(1))
+    expect(to('PATCH', '/admin/catalogs/organization-documents/eca_habilitacion')[0].body).toEqual({ is_active: true })
+  })
+})
+
 describe('accessibility', () => {
   it('the catalogs page', async () => {
     serve()
@@ -211,6 +330,19 @@ describe('accessibility', () => {
     const materials = await section(t.catalogs.materials.title)
     await userEvent.click(await materials.findByRole('button', { name: `${t.catalogs.actions.deactivate} Plástico` }))
     await screen.findByRole('dialog')
+    await expectNoA11yViolations()
+  })
+
+  it('the required-document drawer and its edit dialog', async () => {
+    serve()
+    renderAt('/catalogos')
+    const docs = await section(t.organizationDocuments.title)
+    await userEvent.click(await docs.findByRole('button', { name: t.organizationDocuments.add }))
+    await screen.findByRole('presentation')
+    await expectNoA11yViolations()
+
+    await userEvent.click(screen.getByLabelText(new RegExp(t.organizationDocuments.organizationTypeLabel)))
+    await screen.findByRole('option', { name: t.organizations.types.eca })
     await expectNoA11yViolations()
   })
 })
