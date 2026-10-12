@@ -71,7 +71,7 @@
     "organization_not_applicable": "Este tipo de cuenta no pertenece a una organización.",
     "already_in_organization": "Esa persona ya pertenece a una organización.",
     "organization_not_found": "La organización no existe.",
-    "organization_type_mismatch": "La organización no es del mismo tipo que la cuenta.",
+    "organization_type_mismatch": "La organización no es del tipo que corresponde.",
     "organization_not_active": "La organización aún no está aprobada.",
     "no_organization": "Esta cuenta no pertenece a una organización.",
     "not_verified": "El reciclador aún no está verificado.",
@@ -86,7 +86,9 @@
     "documents_not_approved": "Faltan documentos obligatorios por aprobar.",
     "registration_closed": "El registro de ECA y asociaciones está cerrado: se hace por solicitud.",
     "comment_required": "Escribe el comentario: es lo que lee quien aplica.",
-    "invalid_document_link": "El enlace del documento venció o ya no es válido. Ábrelo de nuevo."
+    "invalid_document_link": "El enlace del documento venció o ya no es válido. Ábrelo de nuevo.",
+    "warehouse_not_found": "La bodega no existe.",
+    "already_owned": "Esta bodega ya tiene una ECA dueña, y la dueña no se cambia."
   },
   "nav": {
     "home": "Inicio",
@@ -94,7 +96,8 @@
     "audit": "Auditoría",
     "catalogs": "Catálogos",
     "applications": "Solicitudes",
-    "organizations": "Organizaciones"
+    "organizations": "Organizaciones",
+    "warehouses": "Bodegas"
   },
   "sidebar": {
     "brand": "Somos R",
@@ -392,7 +395,10 @@
       "transaction.cancelled": "Transacción cancelada",
       "transaction.delivered": "Transacción entregada",
       "transaction.paid": "Transacción pagada",
-      "inventory.updated": "Inventario actualizado"
+      "inventory.updated": "Inventario actualizado",
+      "warehouse.created": "Bodega creada",
+      "warehouse.organization_assigned": "Bodega asignada a una ECA",
+      "warehouse.updated": "Bodega modificada"
     }
   },
   "catalogs": {
@@ -672,6 +678,66 @@
       "noWarehouses": "Sin bodegas.",
       "inactive": "Desactivada",
       "closeButton": "Cerrar"
+    }
+  },
+  "warehouses": {
+    "title": "Bodegas",
+    "subtitle": "Las bodegas de todas las ECA. Una bodega sin ECA dueña no la ve ningún cliente hasta que se le asigna una.",
+    "ownerLabel": "ECA dueña",
+    "ownerFilter": {
+      "all": "Todas",
+      "unassigned": "Sin dueña",
+      "assigned": "Con dueña"
+    },
+    "countSingular": "bodega",
+    "countPlural": "bodegas",
+    "empty": "No hay bodegas con este filtro.",
+    "none": "—",
+    "noOwner": "Sin dueña",
+    "unknownOwner": "ECA no listada",
+    "ownersUnavailable": "Sin permiso para ver organizaciones: no se muestran los nombres de las ECA.",
+    "table": {
+      "name": "Nombre",
+      "address": "Dirección",
+      "owner": "ECA dueña",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "status": {
+      "active": "Activa",
+      "inactive": "Desactivada"
+    },
+    "actions": {
+      "assign": "Asignar ECA",
+      "edit": "Editar",
+      "deactivate": "Desactivar",
+      "reactivate": "Reactivar",
+      "keep": "Cancelar"
+    },
+    "edit": {
+      "title": "Editar bodega",
+      "nameLabel": "Nombre",
+      "addressLabel": "Dirección",
+      "nameTooLong": "Máximo 100 caracteres.",
+      "addressTooLong": "Máximo 300 caracteres."
+    },
+    "assign": {
+      "title": "Asignar ECA dueña",
+      "ecaLabel": "ECA",
+      "noEcas": "No hay ECA aprobadas a las que asignarla.",
+      "warning": "La ECA dueña no se puede cambiar después: el inventario y el historial de la bodega quedarán de esa ECA.",
+      "confirm": "Asignar"
+    },
+    "deactivate": {
+      "title": "Desactivar bodega",
+      "message": "No se podrá usar en pesajes ni ventas nuevos y desaparecerá de la lista de su ECA. Su inventario e historial se conservan."
+    },
+    "messages": {
+      "assigned": "{{name}} ahora es de {{eca}}",
+      "saved": "Cambios guardados en {{name}}",
+      "deactivated": "{{name}} fue desactivada",
+      "reactivated": "{{name}} fue reactivada",
+      "error": "No pudimos completar la acción"
     }
   }
 }

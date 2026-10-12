@@ -17,6 +17,7 @@ const BACKEND_ACTIONS = [
   'weighing.created', 'weighing.validated', 'weighing.rejected', 'weighing.paid',
   'transaction.created', 'transaction.cancelled', 'transaction.delivered', 'transaction.paid',
   'inventory.updated',
+  'warehouse.created', 'warehouse.organization_assigned', 'warehouse.updated',
 ]
 
 describe('audit action texts', () => {

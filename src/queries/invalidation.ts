@@ -17,6 +17,8 @@ export const AFFECTED = {
   catalogChanged: [queryKeys.adminCatalogs.all],
   /** A required document was added, edited, reordered, deactivated or reactivated. */
   organizationDocumentChanged: [queryKeys.organizationDocuments.all],
+  /** A warehouse was given an owner, renamed or (de)activated. An ECA's detail lists its warehouses. */
+  warehouseChanged: [queryKeys.warehouses.all, queryKeys.organizations.all],
 } as const satisfies Record<string, readonly QueryKey[]>
 
 export function invalidateAffected(client: QueryClient, keys: readonly QueryKey[]) {

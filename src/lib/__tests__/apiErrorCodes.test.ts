@@ -18,6 +18,7 @@ const BACKEND_CODES = [
   'organization_not_found', 'organization_type_mismatch', 'organization_not_active', 'no_organization',
   'not_verified', 'invitation_not_pending', 'invalid_role', 'already_in_review', 'application_not_reviewable', 'applicant_account_conflict',
   'organization_already_registered', 'documents_not_approved', 'registration_closed', 'comment_required', 'invalid_document_link', 'code_already_exists', 'invalid_code',
+  'warehouse_not_found', 'already_owned',
 ]
 
 describe('error code dictionary', () => {
