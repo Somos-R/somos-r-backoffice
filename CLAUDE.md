@@ -93,6 +93,14 @@ The QR library (`qrcode.react`) is lazy-loaded with the enrollment step, so it i
 - **Documents** (`ApplicationDocuments`): each document the organization was asked for, with what it uploaded and its state (pending, ok, missing, not compliant). A file is never read directly: **opening it asks for a signed link** (`POST .../documents/{id}/access`, which the server audits as the act of viewing it) and opens the path it returns in a new tab with `noopener,noreferrer`; that tab sends no `Authorization`, the link (valid ~5 minutes) is the credential. Verdicts (`PATCH .../documents/{id}`): *approve* is one step; *missing* and *not compliant* **require a comment** (up to 500 characters) that the applicant reads. Verdicts are offered only while the application is submitted or in review. Approving the application is blocked in the dialog while a required document is not approved (the server refuses it too: `documents_not_approved`), and the documents sent back in an earlier review show in the history.
 - Not built yet: the organizations module (read-only) and the required-documents catalog.
 
+## Organizations (`/organizaciones`, capability `organizations.review`)
+
+`features/organizations/`: **read-only** view of every ECA and Association (`/admin/organizations`), whatever stage of the onboarding it is in.
+- **List**: type, stage (draft, submitted, in review, changes requested, approved, rejected, suspended), text search (name, tax id, email or representative, debounced, 2 characters), server pagination; each row shows how many people work there and how many active links it has.
+- **Detail** (`GET /admin/organizations/{id}`): the server **audits every open**, so it is fetched each time (`staleTime: 0`). Profile, staff (reusing the users module's states and the roles catalog), links with the other side and the rejection reason, and what only some have: recyclers (Associations) or warehouses (ECAs).
+- No actions on purpose: accounts are managed in Users, onboarding in Applications.
+- Not built yet: the required-documents catalog (inside Catalogs) and warehouses.
+
 ## Status
 
 Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling, two-factor sign-in (TOTP, enrollment with QR, recovery codes), layout with menu and guards by capability, a home screen, the users module, the audit viewer, the catalogs (materials and document types) and the applications queue with its decision and the review of its documents. Next, one PR each: the organizations (read-only), the required-documents catalog and warehouses.
