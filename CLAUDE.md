@@ -81,7 +81,7 @@ The QR library (`qrcode.react`) is lazy-loaded with the enrollment step, so it i
 - Lists show **every entry, active or not** (the public lists only carry the active ones). Admin queries live under their own key root (`adminCatalogs`), apart from the public `catalogs` one.
 - **Nothing is deleted.** Add (code + name), rename (the code is immutable: other records point at it), deactivate (asks first; stops new use in weighings, sales, accounts and sellers, hides it from the lists; what exists keeps working) and reactivate (one step).
 - The code format is checked before sending (materials `^[a-z][a-z0-9_]{1,29}$`, document types `^[A-Z][A-Z0-9]{1,9}$`) and the server answers `invalid_code` / `code_already_exists` otherwise; a failed action reloads the list.
-- Not built yet: warehouses (`/admin/warehouses`, with organization assignment) and rejection reasons (they arrive with the backend's applications module, 6.9).
+- Warehouses have their own screen (`/bodegas`, below). Not built yet: rejection reasons (they arrive with the backend's applications module, 6.9).
 
 ## Applications (`/solicitudes`, capability `organizations.review`)
 
@@ -99,8 +99,16 @@ The QR library (`qrcode.react`) is lazy-loaded with the enrollment step, so it i
 - **List**: type, stage (draft, submitted, in review, changes requested, approved, rejected, suspended), text search (name, tax id, email or representative, debounced, 2 characters), server pagination; each row shows how many people work there and how many active links it has.
 - **Detail** (`GET /admin/organizations/{id}`): the server **audits every open**, so it is fetched each time (`staleTime: 0`). Profile, staff (reusing the users module's states and the roles catalog), links with the other side and the rejection reason, and what only some have: recyclers (Associations) or warehouses (ECAs).
 - No actions on purpose: accounts are managed in Users, onboarding in Applications.
-- Not built yet: the required-documents catalog (inside Catalogs) and warehouses.
+- Not built yet: the required-documents catalog (inside Catalogs).
+
+## Warehouses (`/bodegas`, capability `catalogs.manage`)
+
+`features/warehouses/`: every ECA's warehouses (`/admin/warehouses`). One without an owner is invisible to customers until it gets one.
+- **List**: server pagination and an owner filter (all / without owner → `unassigned=true` / with owner → `unassigned=false`). The owner is shown by name, taken from **one** request for every ECA (`GET /admin/organizations?type=eca&limit=200`, `organizationsQueries.ecas()`; it needs `organizations.review`, so without it owners aren't named nor assigned). An owner off that list shows as unknown.
+- **Assign an owner** (`PUT .../{id}/organization`): offered only on warehouses without one, among **approved** ECAs, with a confirmation that says it can't be changed later (`already_owned` otherwise).
+- **Edit** name/address in `FormDrawer` (with `initialValues`), sending only what changed (an emptied address goes as `null`); deactivate asks first, reactivate is one step (`PATCH .../{id}`). Every action reloads warehouses and organizations (an ECA's detail lists its warehouses); a failure reloads too.
+- Nothing is created here (there is no endpoint for it).
 
 ## Status
 
-Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling, two-factor sign-in (TOTP, enrollment with QR, recovery codes), layout with menu and guards by capability, a home screen, the users module, the audit viewer, the catalogs (materials and document types) and the applications queue with its decision and the review of its documents. Next, one PR each: the organizations (read-only), the required-documents catalog and warehouses.
+Tooling, CI, UI primitives, HTTP client, session and refresh, global error handling, two-factor sign-in (TOTP, enrollment with QR, recovery codes), layout with menu and guards by capability, a home screen, the users module, the audit viewer, the catalogs (materials and document types) the applications queue with its decision and the review of its documents, the organizations (read-only) and warehouses.
