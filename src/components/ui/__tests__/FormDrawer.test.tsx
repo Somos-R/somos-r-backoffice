@@ -187,4 +187,23 @@ describe('FormDrawer', () => {
     expect(screen.getByLabelText(/Type/)).toBeInTheDocument()
     expect(screen.getByLabelText('Phone')).toBeInTheDocument()
   })
+
+  it('starts with the initial values when it opens, and loads them again on the next opening', async () => {
+    const onSubmit = vi.fn()
+    const props = { title: 'Edit', fields: TEXT_FIELDS, onClose: vi.fn(), onSubmit }
+    const { rerender } = render(
+      <FormDrawer {...props} open initialValues={{ full_name: 'Ana' }} />
+    )
+    expect(screen.getByLabelText(/Full name/)).toHaveValue('Ana')
+    expect(screen.getByLabelText(/Email/)).toHaveValue('')
+
+    await userEvent.clear(screen.getByLabelText(/Full name/))
+    await userEvent.type(screen.getByLabelText(/Full name/), 'Changed')
+    rerender(<FormDrawer {...props} open={false} initialValues={{ full_name: 'Luis', email: 'l@x.co' }} />)
+    rerender(<FormDrawer {...props} open initialValues={{ full_name: 'Luis', email: 'l@x.co' }} />)
+    expect(screen.getByLabelText(/Full name/)).toHaveValue('Luis')
+
+    await userEvent.click(screen.getByRole('button', { name: /Guardar/ }))
+    expect(onSubmit).toHaveBeenCalledWith({ full_name: 'Luis', email: 'l@x.co' })
+  })
 })
