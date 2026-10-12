@@ -8,6 +8,7 @@ import { usersQueries } from '../users'
 import { auditQueries } from '../audit'
 import { catalogQueries } from '../catalogs'
 import { STALE_TIME } from '../config'
+import { warehousesQueries } from '../warehouses'
 
 const page = { page: 0, rowsPerPage: 25 }
 const original = apiClient.defaults.adapter
@@ -125,5 +126,25 @@ describe('audit queries', () => {
     const b = queryKeys.audit.list({ ...emptyFilters, action: 'auth.login' })
     expect(a[0]).toBe('audit')
     expect(JSON.stringify(a)).not.toBe(JSON.stringify(b))
+  })
+})
+
+describe('warehouses queries', () => {
+  const fetchWarehouses = async (owner: string) => {
+    const seen = record()
+    await new QueryClient().fetchQuery(warehousesQueries.list({ owner, page: 1, rowsPerPage: 10 }))
+    return seen[0]
+  }
+
+  it.each([
+    ['', { limit: 10, offset: 10 }],
+    ['unassigned', { unassigned: true, limit: 10, offset: 10 }],
+    ['assigned', { unassigned: false, limit: 10, offset: 10 }],
+  ])('map the owner filter %j to what the server understands', async (owner, expected) => {
+    expect(await fetchWarehouses(owner)).toEqual(expected)
+  })
+
+  it('go stale with the organizations, whose detail lists an ECA\'s warehouses', () => {
+    expect(AFFECTED.warehouseChanged).toEqual([queryKeys.warehouses.all, queryKeys.organizations.all])
   })
 })

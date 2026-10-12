@@ -31,6 +31,12 @@ export interface FormDrawerProps {
   isSubmitting?: boolean
   submitLabel?: string
   width?: number
+  /** Values the fields start with each time the drawer opens (editing a record); missing ones start empty. */
+  initialValues?: Record<string, string>
+}
+
+function startValues(fields: FormFieldDef[], initial?: Record<string, string>): Record<string, string> {
+  return Object.fromEntries(fields.map((f) => [f.name, initial?.[f.name] ?? '']))
 }
 
 function runValidation(field: FormFieldDef, value: string): string | undefined {
@@ -47,21 +53,23 @@ export function FormDrawer({
   isSubmitting = false,
   submitLabel = t.ui.formDrawer.save,
   width = 420,
+  initialValues,
 }: FormDrawerProps) {
-  const [values, setValues] = useState<Record<string, string>>(() =>
-    Object.fromEntries(fields.map((f) => [f.name, '']))
-  )
+  const [values, setValues] = useState<Record<string, string>>(() => startValues(fields, open ? initialValues : undefined))
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [showPassword, setShowPassword] = useState<Record<string, boolean>>({})
   const fieldsRef = useRef(fields)
+  const initialRef = useRef(initialValues)
 
   useEffect(() => {
     fieldsRef.current = fields
+    initialRef.current = initialValues
   })
 
   useEffect(() => {
+    // Opening loads the record being edited (if any); closing clears everything.
+    setValues(startValues(fieldsRef.current, open ? initialRef.current : undefined))
     if (!open) {
-      setValues(Object.fromEntries(fieldsRef.current.map((f) => [f.name, ''])))
       setErrors({})
       setShowPassword({})
     }

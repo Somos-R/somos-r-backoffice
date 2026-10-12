@@ -3,6 +3,9 @@ import { organizationsService, type OrganizationStatus, type OrganizationType } 
 import { MIN_SEARCH_LENGTH } from './config'
 import { queryKeys, type OrganizationsListKey } from './keys'
 
+/** The most the server returns in one page. */
+export const ECAS_LIMIT = 200
+
 export const organizationsQueries = {
   /** One filtered page; the previous page stays on screen while the next one loads. */
   list: (filters: OrganizationsListKey) =>
@@ -22,6 +25,17 @@ export const organizationsQueries = {
         )
       },
       placeholderData: keepPreviousData,
+    }),
+
+  /**
+   * Every ECA, whatever its status, in one request: the warehouses screen names owners with it and
+   * offers the approved ones as new owners. The server caps a page at 200; past that, an owner off
+   * the list shows as unknown (`total` tells).
+   */
+  ecas: () =>
+    queryOptions({
+      queryKey: queryKeys.organizations.ecas,
+      queryFn: ({ signal }) => organizationsService.list({ type: 'eca', limit: ECAS_LIMIT }, { signal }),
     }),
 
   /** The server audits every time it is opened, so it is not cached for long. */

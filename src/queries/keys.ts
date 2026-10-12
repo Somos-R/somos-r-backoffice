@@ -32,6 +32,13 @@ export interface OrganizationsListKey {
   rowsPerPage: number
 }
 
+/** Filters of the warehouses list; `owner` is '', 'unassigned' or 'assigned'. */
+export interface WarehousesListKey {
+  owner: string
+  page: number
+  rowsPerPage: number
+}
+
 /** Filters of the audit trail. Empty strings mean "no filter"; `since`/`until` are ISO 8601. */
 export interface AuditListKey {
   action: string
@@ -82,6 +89,13 @@ export const queryKeys = {
     all: ['organizations'] as const,
     list: (filters: OrganizationsListKey) => ['organizations', 'list', filters] as const,
     detail: (id: string) => ['organizations', 'detail', id] as const,
+    /** Every ECA (any status), to name warehouse owners and pick a new one. */
+    ecas: ['organizations', 'ecas'] as const,
+  },
+
+  warehouses: {
+    all: ['warehouses'] as const,
+    list: (filters: WarehousesListKey) => ['warehouses', 'list', filters] as const,
   },
 
   audit: {
