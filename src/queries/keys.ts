@@ -65,6 +65,13 @@ export const queryKeys = {
     list: (kind: CatalogKind) => ['adminCatalogs', kind] as const,
   },
 
+  /** The documents an application must attach, by organization type. Its own root: a different
+   * shape from adminCatalogs (organization_type, is_required, sort_order), not just another kind. */
+  organizationDocuments: {
+    all: ['organizationDocuments'] as const,
+    list: ['organizationDocuments', 'list'] as const,
+  },
+
   applications: {
     all: ['applications'] as const,
     list: (filters: ApplicationsListKey) => ['applications', 'list', filters] as const,
